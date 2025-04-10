@@ -50,8 +50,15 @@ def upload(data_interval_start):
                  year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
 
 
+default_args = {
+    'owner': 'ntrg',
+    'retries': 3,
+    'retry_delay': timedelta(minutes=1)
+}
+
 historical_workflow = DAG(
     'HistoricalData',
+    default_args=default_args,
     start_date=datetime(1901, 1, 1),
     schedule_interval='@yearly',
     catchup=True
