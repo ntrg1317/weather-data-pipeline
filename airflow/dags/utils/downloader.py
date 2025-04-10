@@ -21,7 +21,6 @@ airflow_dir = os.environ.get("AIRFLOW_HOME", "/opt/airflow")
 
 def list_object(folder_name, bucket=PUBLIC_BUCKET):
     try:
-        logging.info()
         for idx, obj in enumerate(bucket.objects.filter(Prefix=folder_name)):
             yield obj
         if 'idx' in locals():

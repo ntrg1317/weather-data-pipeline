@@ -6,3 +6,4 @@ cassandra-driver
 pyspark
 numpy
 requests
+minio

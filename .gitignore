@@ -1,3 +1,5 @@
 .venv
 airflow/logs
 .idea
+access
+.env
