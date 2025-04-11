@@ -20,8 +20,6 @@ CONN = psycopg2.connect(**{
     "database": os.environ['POSTGRES_DB']
 })
 
-
-
 def download(data_interval_start):
     """
     Download data file from S3 Bucket using the given year
@@ -48,7 +46,6 @@ def upload(data_interval_start):
     uploader.upload_multiple((file for file in list_of_files))
     logging.info(f"All files for year %s from %s was uploaded to MinIO bucket %s",
                  year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
-
 
 default_args = {
     'owner': 'ntrg',

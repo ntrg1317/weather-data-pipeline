@@ -32,13 +32,15 @@ def list_object(folder_name, bucket=PUBLIC_BUCKET):
 
 def _download_file(obj_key, bucket=PUBLIC_BUCKET):
     year, local_name = obj_key.split('/')[1:]
-    dir = f"{airflow_dir}/raw/{year}"
+    dir = f"{airflow_dir}/data/raw/{year}"
     filename = f"{dir}/{local_name}"
     try:
-        logging.info(f"Downloading %s", filename)
+        # logging.info(f"Downloading %s", filename)
         bucket.download_file(obj_key, filename)
     except ClientError as e:
         logging.error("ERROR: %s", e)
+
+    return filename
 
 @logger
 def download_multiple(list_of_obj):

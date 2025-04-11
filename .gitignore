@@ -3,3 +3,4 @@ airflow/logs
 .idea
 access
 .env
+postgreso
