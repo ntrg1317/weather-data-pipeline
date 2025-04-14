@@ -4,3 +4,4 @@ airflow/logs
 access
 .env
 postgreso
+airflow/data

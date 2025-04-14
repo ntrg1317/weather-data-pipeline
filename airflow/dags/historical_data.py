@@ -43,9 +43,10 @@ def upload(data_interval_start):
     year = data_interval_start.strftime('%Y')
     list_of_files = uploader.list_files(f"{RAW_FILES_DIRECTORY}/{year}")
 
-    uploader.upload_multiple((file for file in list_of_files))
-    logging.info(f"All files for year %s from %s was uploaded to MinIO bucket %s",
-                 year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
+    if uploader.check_connection():
+        uploader.upload_multiple((file for file in list_of_files))
+        logging.info(f"All files for year %s from %s was uploaded to MinIO bucket %s",
+                     year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
 
 default_args = {
     'owner': 'ntrg',
