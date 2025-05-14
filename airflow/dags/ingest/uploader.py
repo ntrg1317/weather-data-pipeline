@@ -11,7 +11,7 @@ from .decorator import logger
 # MinIO Modules
 from minio import Minio
 
-http_client = urllib3.PoolManager(maxsize=50, cert_reqs='CERT_NONE')
+http_client = urllib3.PoolManager(maxsize=500, cert_reqs='CERT_NONE')
 urllib3.disable_warnings()
 
 # Use environment variables with fallback to config values

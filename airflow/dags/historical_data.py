@@ -7,18 +7,11 @@ from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 import logging
 import os
-import psycopg2
 
 #Utils modules
-from utils import downloader, uploader
+from ingest import downloader, uploader
 
 RAW_FILES_DIRECTORY = f"{downloader.airflow_dir}/data/raw"
-CONN = psycopg2.connect(**{
-    "host": "postgres",
-    "user": os.environ['POSTGRES_USER'],
-    "password": os.environ['POSTGRES_PASSWORD'],
-    "database": os.environ['POSTGRES_DB']
-})
 
 def download(data_interval_start):
     """
@@ -74,14 +67,6 @@ with historical_workflow:
         task_id='Download',
         python_callable=download,
     )
-
-    # task2 = BashOperator(
-    #     task_id='ExtractArchive',
-    #     bash_command=f"""
-    #     echo Found $(eval "find {RAW_FILES_DIRECTORY}/{year} -name \'*.gz\' | wc -l") .gz archives in /raw/{year} folder.
-    #     Extracting them all now. && gunzip -fv {RAW_FILES_DIRECTORY}/{year}/*.gz  || true
-    #     """
-    # )
 
     task2 = PythonOperator(
         task_id='Upload',

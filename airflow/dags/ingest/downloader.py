@@ -6,7 +6,6 @@ from .decorator import logger
 
 # S3 Modules
 import boto3
-import botocore
 from botocore.config import Config
 from botocore.exceptions import ClientError
 from botocore.handlers import disable_signing
