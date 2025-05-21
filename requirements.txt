@@ -1,0 +1,10 @@
+dask
+pandas
+boto3
+psycopg2-binary
+cassandra-driver
+pyspark
+numpy
+requests
+minio
+apache-airflow-providers-apache-spark
