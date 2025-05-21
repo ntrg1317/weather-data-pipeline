@@ -7,3 +7,4 @@ pyspark
 numpy
 requests
 minio
+apache-airflow-providers-apache-spark
