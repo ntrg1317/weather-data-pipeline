@@ -5,3 +5,7 @@ access
 .env
 postgreso
 airflow/data
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
