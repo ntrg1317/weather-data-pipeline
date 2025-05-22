@@ -97,15 +97,20 @@ with historical_workflow:
             parallel -j 8 '
                 BASENAME=$(basename {{}})
                 PREFIX=${{BASENAME//-{year}/}}
+                
+                TMPFILE=$(mktemp)
 
                 awk -v prefix="$PREFIX" \\
                     "BEGIN {{ OFS=\\",\\" }}
-                     {{
+                    {{
                         for (i=1; i<=NF; i++) {{
                             if (\\$i == \\"-9999\\") \\$i = \\"null\\"
                         }}
                         print prefix, \\$0
-                     }}" {{}} | gzip > {{}}.csv.gz
+                    }}" {{}} > $TMPFILE
+                gzip -c $TMPFILE > {{}}.csv.gz
+                rm -f $TMPFILE
+                rm -f {{}}
             ' ::: $FILES
             
             # After successful compression, remove original files

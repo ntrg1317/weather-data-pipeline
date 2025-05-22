@@ -32,7 +32,7 @@ with process_data_workflow:
         conn_id='spark_conn',
         verbose=True,
         application_args=[
-            'year', '2023',
+            '2023',
         ]
     )
 

@@ -44,21 +44,9 @@ weather_schema = StructType([
 input_path = f"s3a://{BUCKET_NAME}/{year}/"
 logging.info(f"Đọc dữ liệu từ: {input_path}")
 
-# Đọc tất cả các file CSV nén gzip trong thư mục năm
-# df = spark.read \
-#     .option("header", "true") \
-#     .option("mode", "PERMISSIVE") \
-#     .option("dateFormat", "yyyy-MM-dd HH:mm:ss") \
-#     .schema(weather_schema) \
-#     .load(input_path)
+sc = spark.sparkContext
 
-
-# Hiển thị số lượng bản ghi
-# row_count = df.count()
-# logging.info(f"Đã đọc {row_count} bản ghi cho năm {year}")
-
-data = [("Alice", 1), ("Bob", 2), ("Charlie", 3)]
-df = spark.createDataFrame(data, ["name", "id"])
+df = spark.read.options(compression="gzip").csv(input_path)
 
 df.show()
 
