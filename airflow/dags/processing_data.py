@@ -8,8 +8,9 @@ from airflow.utils.dates import days_ago
 default_args = {
     'owner': 'ntrg',
     'retries': 3,
-    'retry_delay': timedelta(minutes=1)
+    'retry_delay': timedelta(seconds=30)
 }
+
 
 process_data_workflow = DAG(
     'ProcessData',
@@ -22,18 +23,20 @@ process_data_workflow = DAG(
 with process_data_workflow:
     start = BashOperator(
         task_id='Start',
-        bash_command='echo "Start downloading historical data"',
+        bash_command='echo "Start processing historical data"',
     )
 
-    spark_submit_task = SparkSubmitOperator(
-        task_id='SparkSubmit',
-        application='/opt/spark/app/process_raw_data.py',
-        packages="org.apache.hadoop:hadoop-aws:3.3.1,com.amazonaws:aws-java-sdk-bundle:1.12.262",
+    task1 = SparkSubmitOperator(
+        task_id='IngestData',
+        application='app/process_raw_data.py',
+        packages="org.apache.hadoop:hadoop-aws:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.262",
         conn_id='spark_conn',
-        verbose=True,
-        application_args=[
-            '2023',
-        ]
+        verbose=True
     )
 
-start >> spark_submit_task
+    end = BashOperator(
+        task_id='End',
+        bash_command='echo "End processing historical data"',
+    )
+
+start >> task1 >> end

@@ -1,53 +1,65 @@
 import logging
 import os
-
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import *
 from pyspark.sql.types import *
+
+from util.sparkMinIOConn import MinIOConnector
+from util.sparkCassandraConn import SparkCassandraConnector
 
 
 SPARK_APP_NAME=os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER=os.environ.get("SPARK_MASTER", "local[*]")
-SPARK_PACKAGES=os.environ.get("SPARK_PACKAGES")
-MINIO_ENDPOINT=os.environ.get("MINIO_ENDPOINT")
-MINIO_ACCESS_KEY=os.environ.get("MINIO_ACCESS_KEY")
-MINIO_SECRET_KEY=os.environ.get("MINIO_SECRET_KEY")
 BUCKET_NAME=os.environ.get("INPUT_BUCKET")
 
-spark = SparkSession.builder \
-    .appName(SPARK_APP_NAME) \
-    .master(SPARK_MASTER) \
-    .config("spark.jars.packages", SPARK_PACKAGES) \
-    .config("spark.hadoop.fs.s3a.endpoint", f"http://{MINIO_ENDPOINT}") \
-    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
-    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false") \
-    .config("spark.sql.legacy.timeParserPolicy", "LEGACY") \
-    .getOrCreate()
+MINIO_CONFIG = {
+    "endpoint": os.environ.get("MINIO_ENDPOINT"),
+    "access_key": os.environ.get("MINIO_ACCESS_KEY"),
+    "secret_key": os.environ.get("MINIO_SECRET_KEY"),
+}
 
-year = sys.argv[1]
-logging.info(f"Start processing data of {year}")
 
-weather_schema = StructType([
-    StructField("timestamp", TimestampType(), True),
-    StructField("location", StringType(), True),
+minio_conn = MinIOConnector(
+    app_name = "IngestRawData",
+    master = SPARK_MASTER,
+    minio_config = MINIO_CONFIG,
+)
+
+spark = minio_conn.get_session()
+
+schema = StructType([
+    StructField("station", StringType(), False),
+    StructField("year", IntegerType(), False),
+    StructField("month", IntegerType(), False),
+    StructField("day", IntegerType(), False),
+    StructField("hour", IntegerType(), False),
     StructField("temperature", DoubleType(), True),
-    StructField("humidity", DoubleType(), True),
+    StructField("dewpoint", DoubleType(), True),
     StructField("pressure", DoubleType(), True),
+    StructField("wind_direction", IntegerType(), True),
     StructField("wind_speed", DoubleType(), True),
-    StructField("wind_direction", StringType(), True),
+    StructField("sky_condition", IntegerType(), True),
+    StructField("one_hour_precip", DoubleType(), True),
+    StructField("six_hour_precip", DoubleType(), True),
 ])
 
-# Đọc dữ liệu từ MinIO S3
-input_path = f"s3a://{BUCKET_NAME}/{year}/"
-logging.info(f"Đọc dữ liệu từ: {input_path}")
-
-sc = spark.sparkContext
-
-df = spark.read.options(compression="gzip").csv(input_path)
+df = spark \
+    .read \
+    .format("csv") \
+    .option("compression", "gzip") \
+    .option("delimiter", ",") \
+    .schema(schema=schema) \
+    .load("s3a://weather-hourly-raw/*/*.csv.gz")
 
 df.show()
 
 spark.stop()
+
+
+## Insert to Cassandra
+spark_conn = SparkCassandraConnector(
+    app_name = "AstraDB_Spark_Integration",
+    master = SPARK_MASTER,
+    secure_connect_bundle_file_path = config["ASTRA"]["SECURE_CONNECT_BUNDLE"],
+    secure_connect_bundle_file = "secure-connect-weather-cluster.zip",
+    username = config["ASTRA"]["ASTRA_CLIENT_ID"],
+    password = config["ASTRA"]["ASTRA_CLIENT_SECRET"]
+)
