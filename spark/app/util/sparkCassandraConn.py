@@ -12,18 +12,32 @@ class SparkCassandraConnector:
             username: Optional[str] = None,
             password: Optional[str] = None,
     ):
-        self.spark_builder = (
-            SparkSession.builder
-            .appName(app_name)
-            .config("spark.master", master)
-            .config("spark.jars.packages", "com.datastax.spark:spark-cassandra-connector_2.12:3.4.1")
-            .config("spark.files", secure_connect_bundle_file_path)
-            .config("spark.cassandra.connection.config.cloud.path", secure_connect_bundle_file)
-            .config("spark.cassandra.auth.username", username)
-            .config("spark.cassandra.auth.password", password)
-        )
+        self.app_name = app_name
+        self.master = master
+        self.secure_connect_bundle_file_path = secure_connect_bundle_file_path
+        self.secure_connect_bundle_file = secure_connect_bundle_file
+        self.username = username
+        self.password = password
+        self.spark = self._build_session()
 
-        self.spark = self.spark_builder.getOrCreate()
+    def _build_session(self):
+        builder = SparkSession.builder.appName(self.app_name).master(self.master)
+
+        builder = builder \
+            .config("spark.files", self.secure_connect_bundle_file_path) \
+            .config("spark.cassandra.connection.config.cloud.path", self.secure_connect_bundle_file) \
+            .config("spark.cassandra.auth.username", self.username) \
+            .config("spark.cassandra.auth.password", self.password) \
+
+        # Extra packages
+        builder = builder.config("spark.jars.packages", ",".join([
+            "com.datastax.spark:spark-cassandra-connector_2.12:3.5.0",
+        ]))
+
+        return builder.getOrCreate()
+
+    def get_session(self):
+        return self.spark
 
     def read_from_cassandra(
             self,
@@ -72,11 +86,20 @@ class SparkCassandraConnector:
         :param table: Target Cassandra table
         :param mode: Write mode (append/overwrite/ignore)
         """
-        (dataframe.write
-         .format("org.apache.spark.sql.cassandra")
-         .mode(mode)
-         .options(keyspace=keyspace, table=table)
-         .save())
+
+        if mode == "overwrite":
+            (dataframe.write
+             .format("org.apache.spark.sql.cassandra")
+             .mode(mode)
+             .options(keyspace=keyspace, table=table)
+             .option("confirm.truncate", "true")
+             .save())
+        else:
+            (dataframe.write
+             .format("org.apache.spark.sql.cassandra")
+             .mode(mode)
+             .options(keyspace=keyspace, table=table)
+             .save())
 
     def execute_cassandra_query(
             self,

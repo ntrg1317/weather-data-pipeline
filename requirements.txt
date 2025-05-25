@@ -3,7 +3,7 @@ pandas
 boto3
 psycopg2-binary
 cassandra-driver
-pyspark
+pyspark==3.5.5
 numpy
 requests
 minio

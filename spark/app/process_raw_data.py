@@ -10,6 +10,12 @@ SPARK_APP_NAME=os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER=os.environ.get("SPARK_MASTER", "local[*]")
 BUCKET_NAME=os.environ.get("INPUT_BUCKET")
 
+SECURE_CONNECT_BUNDLE_PATH=os.environ.get("SECURE_CONNECT_BUNDLE_PATH")
+SECURE_CONNECT_BUNDLE=os.environ.get("SECURE_CONNECT_BUNDLE")
+ASTRA_CLIENT_ID=os.environ.get("ASTRA_CLIENT_ID")
+ASTRA_CLIENT_SECRET=os.environ.get("ASTRA_CLIENT_SECRET")
+ASTRA_KEYSPACE=os.environ.get("ASTRA_KEYSPACE")
+
 MINIO_CONFIG = {
     "endpoint": os.environ.get("MINIO_ENDPOINT"),
     "access_key": os.environ.get("MINIO_ACCESS_KEY"),
@@ -26,7 +32,7 @@ minio_conn = MinIOConnector(
 spark = minio_conn.get_session()
 
 schema = StructType([
-    StructField("station", StringType(), False),
+    StructField("wsid", StringType(), False),
     StructField("year", IntegerType(), False),
     StructField("month", IntegerType(), False),
     StructField("day", IntegerType(), False),
@@ -47,19 +53,21 @@ df = spark \
     .option("compression", "gzip") \
     .option("delimiter", ",") \
     .schema(schema=schema) \
-    .load("s3a://weather-hourly-raw/*/*.csv.gz")
+    .load("s3a://weather-hourly-raw/2014/*.csv.gz")
 
 df.show()
-
-spark.stop()
-
 
 ## Insert to Cassandra
 spark_conn = SparkCassandraConnector(
     app_name = "AstraDB_Spark_Integration",
     master = SPARK_MASTER,
-    secure_connect_bundle_file_path = config["ASTRA"]["SECURE_CONNECT_BUNDLE"],
-    secure_connect_bundle_file = "secure-connect-weather-cluster.zip",
-    username = config["ASTRA"]["ASTRA_CLIENT_ID"],
-    password = config["ASTRA"]["ASTRA_CLIENT_SECRET"]
+    secure_connect_bundle_file_path = 'spark/data/secure-connect-weather-cluster.zip',
+    secure_connect_bundle_file = 'secure-connect-weather-cluster.zip',
+    username = ASTRA_CLIENT_ID,
+    password = ASTRA_CLIENT_SECRET
 )
+
+spark_conn.write_to_cassandra(df, ASTRA_KEYSPACE, "hourly", "overwrite")
+
+spark.stop()
+spark_conn.close()
