@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "weather"."hourly" (
-    station text,                  // Composite of Air Force Datsav3 station number and NCDC WBAN number
+    wsid text,                  // Composite of Air Force Datsav3 station number and NCDC WBAN number
     year int,                   // Year collected
     month int,                  // Month collected
     day int,                    // Day collected

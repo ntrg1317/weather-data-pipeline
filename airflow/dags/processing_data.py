@@ -43,7 +43,8 @@ with process_data_workflow:
             "org.apache.hadoop:hadoop-aws:3.3.4,"
             "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
             "com.datastax.spark:spark-cassandra-connector_2.12:3.5.0,"
-            "com.github.jnr:jnr-posix:3.1.15"
+            "com.github.jnr:jnr-posix:3.1.15,"
+            "org.postgresql:postgresql:42.7.3"
         ),
         conf={
             'spark.files': 'spark/data/secure-connect-weather-cluster.zip',

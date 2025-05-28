@@ -55,9 +55,17 @@ df = spark \
     .schema(schema=schema) \
     .load("s3a://weather-hourly-raw/2014/*.csv.gz")
 
+before_count = df.count()
+logging.info(f"Number of rows before filtering nulls: {before_count}")
+
+df = df.na.drop(subset=["year", "month", "day", "hour"])
+
+after_count = df.count()
+logging.info(f"Number of rows after filtering nulls: {after_count}")
+
 df.show()
 
-## Insert to Cassandra
+# Insert to Cassandra
 spark_conn = SparkCassandraConnector(
     app_name = "AstraDB_Spark_Integration",
     master = SPARK_MASTER,
@@ -68,6 +76,23 @@ spark_conn = SparkCassandraConnector(
 )
 
 spark_conn.write_to_cassandra(df, ASTRA_KEYSPACE, "hourly", "overwrite")
+
+# PostgreSQL connection info
+# POSTGRES_URL = f"jdbc:postgresql://postgres:{os.environ.get('POSTGRES_PORT', 5432)}/{os.environ.get('POSTGRES_DB')}"
+# POSTGRES_PROPERTIES = {
+#     "user": os.environ.get("POSTGRES_USER"),
+#     "password": os.environ.get("POSTGRES_PASSWORD"),
+#     "driver": "org.postgresql.Driver"
+# }
+#
+# # Write DataFrame to PostgreSQL
+# df.write \
+#     .jdbc(
+#         url=POSTGRES_URL,
+#         table="isd.hourly",  # PostgreSQL table name
+#         mode="overwrite",        # or "append", "ignore", "error"
+#         properties=POSTGRES_PROPERTIES
+#     )
 
 spark.stop()
 spark_conn.close()
