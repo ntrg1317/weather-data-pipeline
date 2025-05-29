@@ -13,6 +13,7 @@ RUN apt-get update && \
         openjdk-17-jre-headless \
         procps \
         curl \
+        bzip2 \
         parallel && \
     apt-get autoremove -yqq --purge && \
     apt-get clean && \

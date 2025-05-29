@@ -71,6 +71,8 @@ def create_my_dag(**kwargs):
         start_date=kwargs['start_date'],
         schedule_interval=kwargs['schedule_interval'],
         catchup=kwargs['catchup'],
+        tags=['weather', 'data-ingestion', 'minio', kwargs['tags']],
+        max_active_runs=1
     ) as dag:
         year = '{{ data_interval_start.strftime("%Y") }}'
 
@@ -111,7 +113,7 @@ def create_my_dag(**kwargs):
                     # Get the list of files without extension
                     FILES=$(find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.*")
 
-                    parallel -j 8 '
+                    parallel -j 12 '
                         BASENAME=$(basename {{}})
                         PREFIX=${{BASENAME//-{year}/}}
 
@@ -125,17 +127,17 @@ def create_my_dag(**kwargs):
                                 }}
                                 print prefix, \\$0
                             }}" {{}} > $TMPFILE
-                        gzip -c $TMPFILE > {{}}.csv.gz
+                        bzip2 -c $TMPFILE > {{}}.csv.bz2
                         rm -f $TMPFILE
                         rm -f {{}}
                     ' ::: $FILES
 
                     # After successful compression, remove original files
                     echo "Removing original files..."
-                    find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.csv.gz" -delete
+                    find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.csv.bz2" -delete
 
                     # Report summary
-                    COMPRESSED_COUNT=$(find {RAW_FILES_DIRECTORY}/{year} -name "*.csv.gz" | wc -l)
+                    COMPRESSED_COUNT=$(find {RAW_FILES_DIRECTORY}/{year} -name "*.csv.bz2" | wc -l)
                     echo "Cleanup complete. $COMPRESSED_COUNT compressed files remain in {RAW_FILES_DIRECTORY}/{year}."
                 """
         )
@@ -160,5 +162,5 @@ def create_my_dag(**kwargs):
     return dag
 
 # Create DAGs with different schedule intervals
-dag_daily = create_my_dag(dag_id='DailyData', start_date=days_ago(1), schedule_interval='@daily', catchup=False)
-dag_yearly = create_my_dag(dag_id='HistoricalData', start_date=datetime(2010, 1, 1), schedule_interval='@yearly', catchup=True)
+dag_daily = create_my_dag(dag_id='DailyData', start_date=days_ago(1), schedule_interval='@daily', catchup=False, tags='daily')
+dag_yearly = create_my_dag(dag_id='HistoricalData', start_date=datetime(2010, 1, 1), schedule_interval='@yearly', catchup=True, tags='yearly')
