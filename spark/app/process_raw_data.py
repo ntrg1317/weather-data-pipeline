@@ -11,12 +11,6 @@ SPARK_APP_NAME = os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER = os.environ.get("SPARK_MASTER", "local[*]")
 BUCKET_NAME = os.environ.get("INPUT_BUCKET")
 
-SECURE_CONNECT_BUNDLE_PATH = os.environ.get("SECURE_CONNECT_BUNDLE_PATH")
-SECURE_CONNECT_BUNDLE = os.environ.get("SECURE_CONNECT_BUNDLE")
-# ASTRA_CLIENT_ID = os.environ.get("ASTRA_CLIENT_ID")
-# ASTRA_CLIENT_SECRET = os.environ.get("ASTRA_CLIENT_SECRET")
-ASTRA_CLIENT_ID = "HKvNhnDoKtfxzyWlIwziWWMb"
-ASTRA_CLIENT_SECRET = "XTYRfXDk2OlFXAlphiTZC1i6__emKzg.,LGaIfCfyO+4HR99hN6FF2HAT4BKcD40_7MAvPN6b1QiQtl_SxDUxTsAS+JLhMCNNcYxvRgPgO336pIr7Re3MeGnEzrzBZwM"
 ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
 
 MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT")
@@ -43,10 +37,8 @@ spark = (
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false")
 
     # Cassandra configs
-    .config("spark.files", "spark/data/secure-connect-weather-cluster.zip")
-    .config("spark.cassandra.connection.config.cloud.path", "secure-connect-weather-cluster.zip")
-    .config("spark.cassandra.auth.username", ASTRA_CLIENT_ID)
-    .config("spark.cassandra.auth.password", ASTRA_CLIENT_SECRET)
+    .config("spark.cassandra.connection.host", "cassandra")
+    .config("spark.cassandra.connection.port", "9042")
 
     # Cassandra performance tuning (optional)
     .config("spark.cassandra.output.batch.size.rows", "1000")

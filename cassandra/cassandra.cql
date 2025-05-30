@@ -1,3 +1,6 @@
+-- Create a keyspace
+CREATE KEYSPACE IF NOT EXISTS weather WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '1' };
+
 CREATE TABLE IF NOT EXISTS "weather"."hourly" (
     wsid text,                  // Composite of Air Force Datsav3 station number and NCDC WBAN number
     year int,                   // Year collected
@@ -15,17 +18,17 @@ CREATE TABLE IF NOT EXISTS "weather"."hourly" (
     PRIMARY KEY ((wsid), year, month, day, hour)
 ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC, hour DESC);
 
-CREATE TABLE "weather"."station" (
-    station      TEXT PRIMARY KEY,
-    usaf         TEXT,
-    wban         TEXT,
-    name         TEXT,
-    country      TEXT,
-    province     TEXT,
-    icao         TEXT,
-    latitude     DOUBLE,
-    longitude    DOUBLE,
-    elevation    DOUBLE,
-    begin_date   DATE,
-    end_date     DATE
-);
+-- CREATE TABLE "weather"."station" (
+--     station      TEXT PRIMARY KEY,
+--     usaf         TEXT,
+--     wban         TEXT,
+--     name         TEXT,
+--     country      TEXT,
+--     province     TEXT,
+--     icao         TEXT,
+--     latitude     DOUBLE,
+--     longitude    DOUBLE,
+--     elevation    DOUBLE,
+--     begin_date   DATE,
+--     end_date     DATE
+-- );

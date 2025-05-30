@@ -8,4 +8,4 @@ numpy
 requests
 minio
 apache-airflow-providers-apache-spark
-argparse
+apache-airflow-providers-apache-cassandra

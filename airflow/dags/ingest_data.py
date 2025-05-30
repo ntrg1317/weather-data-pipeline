@@ -142,13 +142,56 @@ def create_my_dag(**kwargs):
                 """
         )
 
-        task4 = PythonOperator(
+        task4 = BashOperator(
+            task_id='CombineFiles',
+            do_xcom_push=False,
+            bash_command=f"""
+                TARGET_DIR="{RAW_FILES_DIRECTORY}/{year}"
+                TMP_DIR="$TARGET_DIR/tmp_combine"
+                TARGET_SIZE_MB=128
+
+                mkdir -p "$TMP_DIR"
+                cd "$TARGET_DIR"
+
+                echo "📦 Decompressing all .csv.bz2 into one file..."
+                bzcat *.csv.bz2 > "$TMP_DIR/all_data.csv"
+
+                echo "📊 Counting total lines..."
+                TOTAL_LINES=$(wc -l < "$TMP_DIR/all_data.csv")
+                echo "Total lines: $TOTAL_LINES"
+
+                # Estimate compression ratio (adjust this if needed)
+                COMPRESSION_RATIO=0.25  # avg bzip2 ratio
+                BYTES_PER_LINE=$(wc -c < "$TMP_DIR/all_data.csv")
+                BYTES_PER_LINE=$(($BYTES_PER_LINE / $TOTAL_LINES))
+                LINES_PER_CHUNK=$(( ($TARGET_SIZE_MB * 1024 * 1024) / ($BYTES_PER_LINE * $COMPRESSION_RATIO) ))
+
+                echo "Estimated lines per 128MB chunk: $LINES_PER_CHUNK"
+
+                echo "🚀 Splitting file..."
+                split -l $LINES_PER_CHUNK "$TMP_DIR/all_data.csv" "$TMP_DIR/chunk_"
+
+                echo "🗜 Compressing chunks..."
+                for chunk in "$TMP_DIR"/chunk_*; do
+                    bzip2 -c "$chunk" > "$TARGET_DIR/combined_$(basename $chunk).csv.bz2"
+                done
+
+                echo "🧹 Cleaning up..."
+                rm -rf "$TMP_DIR"
+                find "$TARGET_DIR" -maxdepth 1 -name "*.csv.bz2" -not -name "combined_*" -delete
+
+                echo "✅ Done. Final combined files:"
+                du -sh "$TARGET_DIR"/combined_*.csv.bz2
+            """
+        )
+
+        task5 = PythonOperator(
             task_id='Upload',
             python_callable=upload,
             provide_context=True
         )
 
-        task5 = BashOperator(
+        task6 = BashOperator(
             task_id='Cleanup',
             bash_command=f"rm -rf {RAW_FILES_DIRECTORY}/{year}"
         )
@@ -158,7 +201,7 @@ def create_my_dag(**kwargs):
             bash_command='echo "Upload raw data to MinIO successfully!"',
         )
 
-    chain(start, task1, task2, task3, task4, task5, end)
+    chain(start, task1, task2, task3, task4, task5, task6, end)
     return dag
 
 # Create DAGs with different schedule intervals

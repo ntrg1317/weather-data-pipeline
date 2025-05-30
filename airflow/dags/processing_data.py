@@ -3,51 +3,57 @@ from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.providers.apache.cassandra.hooks.cassandra import CassandraHook
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
-from airflow.utils.dates import days_ago
 
-from cassandra.cluster import Cluster
-from cassandra.auth import PlainTextAuthProvider
-from cassandra.query import SimpleStatement
+# SECURE_CONNECT_BUNDLE_PATH = "/opt/airflow/spark/data/secure-connect-weather-cluster.zip"
+# SECURE_CONNECT_BUNDLE = os.environ.get("SECURE_CONNECT_BUNDLE", "secure-connect-weather-cluster.zip")
+# CLIENT_ID = os.environ.get("ASTRA_CLIENT_ID")
+# CLIENT_SECRET = os.environ.get("ASTRA_CLIENT_SECRET")
+# ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
 
-SECURE_CONNECT_BUNDLE_PATH = "/opt/airflow/spark/data/secure-connect-weather-cluster.zip"
-SECURE_CONNECT_BUNDLE = os.environ.get("SECURE_CONNECT_BUNDLE", "secure-connect-weather-cluster.zip")
-CLIENT_ID = os.environ.get("ASTRA_CLIENT_ID")
-CLIENT_SECRET = os.environ.get("ASTRA_CLIENT_SECRET")
-ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
+CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST")
+CASSANDRA_PORT = os.environ.get("CASSANDRA_PORT")
 
-# def delete_duplicates(data_interval_start):
-#     auth_provider = PlainTextAuthProvider(CLIENT_ID, CLIENT_SECRET)
-#     cluster = Cluster(cloud={'secure_connect_bundle': SECURE_CONNECT_BUNDLE_PATH}, auth_provider=auth_provider)
-#     session = cluster.connect()
-#     session.set_keyspace(ASTRA_KEYSPACE)
-#
-#     year = data_interval_start.strftime('%Y')
-#     try:
-#         # You must have an index on year or know common station_ids
-#         query = f"SELECT wsid FROM hourly WHERE year = {year} ALLOW FILTERING"
-#         stmt = SimpleStatement(query, fetch_size=100)
-#         rows = session.execute(stmt)
-#         wsids = set(row.wsid for row in rows)
-#     except Exception as e:
-#         logging.error(f"Failed to check existing data for year {year}: {e}")
-#         session.shutdown()
-#         return
-#
-#     if not wsids:
-#         logging.info(f"No data to delete for year {year}")
-#         session.shutdown()
-#         return
-#
-#     try:
-#         for wsid in wsids:
-#             delete_query = f"DELETE FROM hourly WHERE wsid = %s AND year = %s"
-#             session.execute(delete_query, (wsid, int(year)))
-#         logging.info(f"Deleted existing data for year {year} for {len(wsids)} stations")
-#     except Exception as e:
-#         logging.error(f"Failed to delete data: {e}")
-#     finally:
-#         session.shutdown()
+def setup():
+    try:
+        hook = CassandraHook(cassandra_conn_id='cassandra_conn')
+        session = hook.get_conn()
+
+        # Create keyspace
+        session.execute("""
+        CREATE KEYSPACE IF NOT EXISTS weather
+        WITH REPLICATION = { 
+            'class' : 'SimpleStrategy', 
+            'replication_factor' : 1 
+            }
+        """)
+
+        session.set_keyspace('weather')
+
+        session.execute("""
+        CREATE TABLE IF NOT EXISTS hourly (
+            wsid text,
+            year int,
+            month int,
+            day int,
+            hour int,
+            temperature double,
+            dewpoint double,
+            pressure double,
+            wind_direction int,
+            wind_speed double,
+            sky_condition int,
+            one_hour_precip double,
+            six_hour_precip double,
+            PRIMARY KEY ((wsid), year, month, day, hour)
+        ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC, hour DESC);
+        """)
+
+        logging.info("Cassandra keyspace and table setup completed")
+    except Exception as e:
+        logging.error("Error setting up Cassandra keyspace and table: %s", e)
+        raise
 
 default_args = {
     'owner': 'ntrg',
@@ -65,7 +71,7 @@ process_data_workflow = DAG(
     description='Process historical data workflow',
     start_date=datetime(2010, 1, 1),
     schedule_interval='@yearly',
-    catchup=False,
+    catchup=True,
     max_active_runs=1,
     tags=['weather', 'data-processing', 'spark']
 )
@@ -73,35 +79,20 @@ process_data_workflow = DAG(
 with process_data_workflow:
     year = '{{ data_interval_start.strftime("%Y") }}'
 
-    pre_check = BashOperator(
-        task_id='Pre-flightCheck',
+    start = BashOperator(
+        task_id='Start',
         bash_command='''
-            echo "=== Pre-flight Checks ==="
+            echo "=== Start ingest raw data to cassandra ==="
             echo "Execution Date: {{ ds }}"
             echo "Logical Date: {{ logical_date }}"
             echo "Next Execution Date: {{ next_ds }}"
-            echo "Secure Bundle Path: {{ params.secure_bundle_path }}"
-
-            # Check if secure bundle exists
-            if [ -f "{{ params.secure_bundle_path }}" ]; then
-                echo "✓ Secure bundle found"
-            else
-                echo "✗ Secure bundle not found at {{ params.secure_bundle_path }}"
-                exit 1
-            fi
-
-            echo "=== Checks Complete ==="
-            ''',
-        params={
-            'secure_bundle_path': SECURE_CONNECT_BUNDLE_PATH
-        }
+            '''
     )
 
-    # delete_duplicates = PythonOperator(
-    #     task_id='DeleteDuplicates',
-    #     python_callable=delete_duplicates,
-    #     provide_context=True,
-    # )
+    setup = PythonOperator(
+        task_id='SetupCassandra',
+        python_callable=setup,
+    )
     
     ingest_data = SparkSubmitOperator(
         task_id='IngestRawData',
@@ -109,17 +100,19 @@ with process_data_workflow:
         packages=(
             "org.apache.hadoop:hadoop-aws:3.3.4,"
             "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
-            "com.datastax.spark:spark-cassandra-connector_2.12:3.5.0,"
+            "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0,"
             "com.github.jnr:jnr-posix:3.1.15"
         ),
         conf={
-            'spark.files': 'spark/data/secure-connect-weather-cluster.zip',
-            'spark.cassandra.connection.config.cloud.path': 'secure-connect-weather-cluster.zip',
+            # 'spark.files': 'spark/data/secure-connect-weather-cluster.zip',
+            # 'spark.cassandra.connection.config.cloud.path': 'secure-connect-weather-cluster.zip',
             'spark.driver.memory': '4g',
             'spark.executor.memory': '3g',
             'spark.sql.adaptive.enabled': 'true',
             'spark.sql.adaptive.coalescePartitions.enabled': 'true',
             'spark.sql.files.maxPartitionBytes': '134217728',
+            'spark.cassandra.connection.host': 'cassandra',
+            'spark.cassandra.connection.port': '9042',
         },
         conn_id='spark_conn',
         verbose=True,
@@ -141,9 +134,8 @@ with process_data_workflow:
     #         ''',
     # )
 
-    # Cleanup and notification
-    cleanup = BashOperator(
-        task_id='Cleanup',
+    end = BashOperator(
+        task_id='End',
         bash_command='''
             echo "=== Processing Complete ==="
             echo "Execution Date: {{ ds }}"
@@ -167,4 +159,4 @@ with process_data_workflow:
     )
 
     # Task dependencies
-    pre_check >> delete_duplicates >> ingest_data  >> cleanup
+    start >> setup >> ingest_data  >> end
