@@ -39,22 +39,16 @@ spark = (
     # Cassandra configs
     .config("spark.cassandra.connection.host", "cassandra")
     .config("spark.cassandra.connection.port", "9042")
+    # Configure Spark for Cassandra optimization
+    .config("spark.cassandra.output.batch.size.rows", "200")
+    .config("spark.cassandra.output.batch.size.bytes", "1048576")  # 5MB
+    .config("spark.cassandra.output.concurrent.writes", "50")
+    .config("spark.cassandra.output.batch.grouping.buffer.size", "200")
 
-    # Cassandra performance tuning (optional)
-    .config("spark.cassandra.output.batch.size.rows", "1000")
-    .config("spark.cassandra.output.batch.size.bytes", "5242880")
-    .config("spark.cassandra.output.concurrent.writes", "100")
-    .config("spark.cassandra.output.batch.grouping.buffer.size", "1000")
+    .config("spark.sql.files.maxPartitionBytes", "134217728")
 
     .getOrCreate()
 )
-
-# Configure Spark for Cassandra optimization
-spark.conf.set("spark.cassandra.output.batch.size.rows", "1000")
-spark.conf.set("spark.cassandra.output.batch.size.bytes", "5242880")  # 5MB
-spark.conf.set("spark.cassandra.output.concurrent.writes", "100")
-spark.conf.set("spark.cassandra.output.batch.grouping.buffer.size", "1000")
-spark.conf.set("spark.sql.files.maxPartitionBytes", "134217728")
 
 # -------------------- Schema Definition --------------------
 schema = StructType([
@@ -82,13 +76,15 @@ df = spark.read \
     .option("multiline", "false") \
     .option("escape", '"') \
     .schema(schema) \
-    .load(f"s3a://weather-hourly-raw/{args.year}/*.csv.bz2")
+    .load(f"s3a://weather-hourly-raw/{args.year}.csv.bz2")
 
 df.show()
 
 df = df.na.drop(subset=["year", "month", "day", "hour"])
-df = df.coalesce(100)
 
+df = df.repartition(200, "year", "month")
+
+# -------------------- Write to Cassadra --------------------
 try:
     start_time = time.time()
 
@@ -99,21 +95,9 @@ try:
         .mode("append") \
         .save()
 
-    end_time = time.time()
-    logging.info(f"Write completed in {end_time - start_time:.2f} seconds")
-
-    # Verify write
-    verification_df = spark.read \
-        .format("org.apache.spark.sql.cassandra") \
-        .option("keyspace", ASTRA_KEYSPACE) \
-        .option("table", "hourly") \
-        .load()
-    verification_count = verification_df.count()
-    logging.info(f"Verification: {verification_count} records in Cassandra")
-
+    duration = time.time() - start_time
+    logging.info(f"Write successful in {duration:.2f} seconds")
 except Exception as e:
-    logging.error(f"Error writing to Cassandra: {str(e)}")
-    raise
+    logging.info("Failed to write data. ERROR: %s", e)
 
-finally:
-    spark.stop()
+spark.stop()

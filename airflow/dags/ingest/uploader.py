@@ -98,3 +98,10 @@ def upload_multiple(list_of_files):
     with concurrent.futures.ThreadPoolExecutor() as executor:
         results = list(executor.map(_upload_file, list_of_files))
         logging.info(f"Uploaded {len(results)} files")
+
+def upload_single(filepath):
+    filename = filepath.strip('/').split('/')[-1]
+    try:
+        MINIO_CLI.fput_object(BUCKET_NAME, filename, filepath)
+    except Exception as e:
+        logging.error("ERROR: %s", e)

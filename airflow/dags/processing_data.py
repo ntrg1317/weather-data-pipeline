@@ -106,8 +106,8 @@ with process_data_workflow:
         conf={
             # 'spark.files': 'spark/data/secure-connect-weather-cluster.zip',
             # 'spark.cassandra.connection.config.cloud.path': 'secure-connect-weather-cluster.zip',
-            'spark.driver.memory': '4g',
-            'spark.executor.memory': '3g',
+            'spark.driver.memory': '2g',
+            'spark.executor.memory': '2g',
             'spark.sql.adaptive.enabled': 'true',
             'spark.sql.adaptive.coalescePartitions.enabled': 'true',
             'spark.sql.files.maxPartitionBytes': '134217728',

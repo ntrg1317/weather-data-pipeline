@@ -50,13 +50,15 @@ def download(data_interval_start, **context):
 def upload(data_interval_start, **context):
 
     year = data_interval_start.strftime("%Y")
+    filepath = f"{RAW_FILES_DIRECTORY}/{year}.csv.bz2"
 
-    list_of_files = uploader.list_files(f"{RAW_FILES_DIRECTORY}/{year}")
-
-    if uploader.check_connection():
-        uploader.upload_multiple((file for file in list_of_files))
-        logging.info(f"All files for YEAR %s from %s was uploaded to MinIO bucket %s",
-                     year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
+    # list_of_files = uploader.list_files(f"{RAW_FILES_DIRECTORY}/{year}")
+    #
+    # if uploader.check_connection():
+    #     uploader.upload_multiple((file for file in list_of_files))
+    #     logging.info(f"All files for YEAR %s from %s was uploaded to MinIO bucket %s",
+    #                  year, f"data/raw/{year}", f"{uploader.BUCKET_NAME}")
+    uploader.upload_single(filepath)
 
 default_args = {
     'owner': 'ntrg',
@@ -72,7 +74,7 @@ def create_my_dag(**kwargs):
         schedule_interval=kwargs['schedule_interval'],
         catchup=kwargs['catchup'],
         tags=['weather', 'data-ingestion', 'minio', kwargs['tags']],
-        max_active_runs=1
+        max_active_runs=2
     ) as dag:
         year = '{{ data_interval_start.strftime("%Y") }}'
 
@@ -131,59 +133,24 @@ def create_my_dag(**kwargs):
                         rm -f $TMPFILE
                         rm -f {{}}
                     ' ::: $FILES
-
-                    # After successful compression, remove original files
-                    echo "Removing original files..."
-                    find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.csv.bz2" -delete
-
-                    # Report summary
-                    COMPRESSED_COUNT=$(find {RAW_FILES_DIRECTORY}/{year} -name "*.csv.bz2" | wc -l)
-                    echo "Cleanup complete. $COMPRESSED_COUNT compressed files remain in {RAW_FILES_DIRECTORY}/{year}."
                 """
         )
 
         task4 = BashOperator(
-            task_id='CombineFiles',
+            task_id='CombineAndCompress',
             do_xcom_push=False,
             bash_command=f"""
-                TARGET_DIR="{RAW_FILES_DIRECTORY}/{year}"
-                TMP_DIR="$TARGET_DIR/tmp_combine"
-                TARGET_SIZE_MB=128
-
-                mkdir -p "$TMP_DIR"
-                cd "$TARGET_DIR"
-
-                echo "📦 Decompressing all .csv.bz2 into one file..."
-                bzcat *.csv.bz2 > "$TMP_DIR/all_data.csv"
-
-                echo "📊 Counting total lines..."
-                TOTAL_LINES=$(wc -l < "$TMP_DIR/all_data.csv")
-                echo "Total lines: $TOTAL_LINES"
-
-                # Estimate compression ratio (adjust this if needed)
-                COMPRESSION_RATIO=0.25  # avg bzip2 ratio
-                BYTES_PER_LINE=$(wc -c < "$TMP_DIR/all_data.csv")
-                BYTES_PER_LINE=$(($BYTES_PER_LINE / $TOTAL_LINES))
-                LINES_PER_CHUNK=$(( ($TARGET_SIZE_MB * 1024 * 1024) / ($BYTES_PER_LINE * $COMPRESSION_RATIO) ))
-
-                echo "Estimated lines per 128MB chunk: $LINES_PER_CHUNK"
-
-                echo "🚀 Splitting file..."
-                split -l $LINES_PER_CHUNK "$TMP_DIR/all_data.csv" "$TMP_DIR/chunk_"
-
-                echo "🗜 Compressing chunks..."
-                for chunk in "$TMP_DIR"/chunk_*; do
-                    bzip2 -c "$chunk" > "$TARGET_DIR/combined_$(basename $chunk).csv.bz2"
-                done
-
-                echo "🧹 Cleaning up..."
-                rm -rf "$TMP_DIR"
-                find "$TARGET_DIR" -maxdepth 1 -name "*.csv.bz2" -not -name "combined_*" -delete
-
-                echo "✅ Done. Final combined files:"
-                du -sh "$TARGET_DIR"/combined_*.csv.bz2
-            """
+                    # Decompress all bzip2 files and combine them
+                    find {RAW_FILES_DIRECTORY}/{year} -name "*.csv.bz2" -exec bzcat {{}} \\; > {RAW_FILES_DIRECTORY}/{year}.csv
+        
+                    # Compress the combined file
+                    bzip2 -f {RAW_FILES_DIRECTORY}/{year}.csv
+        
+                    # Remove individual compressed files
+                    rm -rf {RAW_FILES_DIRECTORY}/{year}
+                """
         )
+
 
         task5 = PythonOperator(
             task_id='Upload',
@@ -193,7 +160,7 @@ def create_my_dag(**kwargs):
 
         task6 = BashOperator(
             task_id='Cleanup',
-            bash_command=f"rm -rf {RAW_FILES_DIRECTORY}/{year}"
+            bash_command=f"rm -rf {RAW_FILES_DIRECTORY}/{year}.csv.bz2"
         )
 
         end = BashOperator(
