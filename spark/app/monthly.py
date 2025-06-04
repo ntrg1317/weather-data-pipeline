@@ -39,8 +39,8 @@ spark = (
     .config("spark.cassandra.output.batch.grouping.buffer.size", "200")
 
     .config("spark.sql.files.maxPartitionBytes", "134217728")
-    .config("spark.cassandra.connection.timeout_ms", "30000")
-    .config("spark.cassandra.read.timeout_ms", "30000")
+    .config("spark.cassandra.connection.timeoutMS", "30000")
+    .config("spark.cassandra.read.timeoutMS", "30000")
 
     .getOrCreate()
 )
@@ -56,32 +56,33 @@ df_daily = spark.read \
 df_monthly = df_daily.groupBy("wsid", "year", "month") \
     .agg(
         sum("n_records").alias("n_records"),
-        avg("temperature_avg").alias("temperature_avg"),
+        round(avg("temperature_avg"), 0).alias("temperature_avg"),
         min("temperature_min").alias("temperature_min"),
         max("temperature_max").alias("temperature_max"),
 
-        avg("dewpoint_avg").alias("dewpoint_avg"),
+        round(avg("dewpoint_avg"), 0).alias("dewpoint_avg"),
         min("dewpoint_min").alias("dewpoint_min"),
         max("dewpoint_max").alias("dewpoint_max"),
 
-        avg("pressure_avg").alias("pressure_avg"),
+        round(avg("pressure_avg"), 0).alias("pressure_avg"),
         min("pressure_min").alias("pressure_min"),
         max("pressure_max").alias("pressure_max"),
 
-        avg("wind_direction").alias("wind_direction"),
-        avg("wind_speed_avg").alias("wind_speed_avg"),
+        round(avg("wind_direction"), 0).alias("wind_direction"),
+        round(avg("wind_speed_avg"), 0).alias("wind_speed_avg"),
         min("wind_speed_min").alias("wind_speed_min"),
         max("wind_speed_max").alias("wind_speed_max"),
 
-        round(avg("sky_condition")).alias("sky_condition"),
+        round(avg("sky_condition"), 0).alias("sky_condition"),
 
-        avg("one_hour_precip").alias("one_hour_precipitation_avg"),
-        min("one_hour_precip").alias("one_hour_precipitation_min"),
-        max("one_hour_precip").alias("one_hour_precipitation_max"),
+        sum("precipitation").alias("precipitation"),
+        round(avg("one_hour_precipitation_avg"), 0).alias("one_hour_precipitation_avg"),
+        min("one_hour_precipitation_min").alias("one_hour_precipitation_min"),
+        max("one_hour_precipitation_max").alias("one_hour_precipitation_max"),
 
-        avg("six_hour_precip").alias("six_hour_precipitation_avg"),
-        min("six_hour_precip").alias("six_hour_precipitation_min"),
-        max("six_hour_precip").alias("six_hour_precipitation_max")
+        round(avg("six_hour_precipitation_avg"), 0).alias("six_hour_precipitation_avg"),
+        min("six_hour_precipitation_min").alias("six_hour_precipitation_min"),
+        max("six_hour_precipitation_max").alias("six_hour_precipitation_max")
     )
 
 df_monthly.write \

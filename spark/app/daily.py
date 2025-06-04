@@ -57,33 +57,34 @@ df_daily = df_hourly.groupBy("wsid", "year", "month", "day") \
     .agg(
         count("hour").alias("n_records"),
 
-        round(avg("temperature"), 2).alias("temperature_avg"),
+        round(avg("temperature"), 0).alias("temperature_avg"),
         min("temperature").alias("temperature_min"),
         max("temperature").alias("temperature_max"),
 
-        round(avg("dewpoint"), 2).alias("dewpoint_avg"),
+        round(avg("dewpoint"), 0).alias("dewpoint_avg"),
         min("dewpoint").alias("dewpoint_min"),
         max("dewpoint").alias("dewpoint_max"),
 
-        round(avg("pressure"), 2).alias("pressure_avg"),
+        round(avg("pressure"), 0).alias("pressure_avg"),
         min("pressure").alias("pressure_min"),
         max("pressure").alias("pressure_max"),
 
-        round(avg("wind_direction"), 2).alias("wind_direction"),
-        round(avg("wind_speed"), 2).alias("wind_speed_avg"),
+        round(avg("wind_direction"), 0).alias("wind_direction"),
+        round(avg("wind_speed"), 0).alias("wind_speed_avg"),
         min("wind_speed").alias("wind_speed_min"),
         max("wind_speed").alias("wind_speed_max"),
 
         round(avg("sky_condition"), 0).alias("sky_condition"),
 
-        round(avg("one_hour_precip"), 2).alias("one_hour_precipitation_avg"),
+        sum("precipitation").alias("precipitation"),
+        round(avg("one_hour_precip"), 0).alias("one_hour_precipitation_avg"),
         min("one_hour_precip").alias("one_hour_precipitation_min"),
         max("one_hour_precip").alias("one_hour_precipitation_max"),
 
-        round(avg("six_hour_precip"), 2).alias("six_hour_precipitation_avg"),
+        round(avg("six_hour_precip"), 0).alias("six_hour_precipitation_avg"),
         min("six_hour_precip").alias("six_hour_precipitation_min"),
         max("six_hour_precip").alias("six_hour_precipitation_max")
-)
+    )
 
 df_daily.write \
     .format("org.apache.spark.sql.cassandra") \
