@@ -1,20 +1,20 @@
 -- Create a keyspace
 CREATE KEYSPACE IF NOT EXISTS weather WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : '1' };
 
-CREATE TABLE IF NOT EXISTS "weather"."hourly" (
-    wsid text,                  // Composite of Air Force Datsav3 station number and NCDC WBAN number
-    year int,                   // Year collected
-    month int,                  // Month collected
-    day int,                    // Day collected
-    hour int,                   // Hour collected
-    temperature double,         // Air temperature (degrees Celsius)
-    dewpoint double,            // Dew point temperature (degrees Celsius)
-    pressure double,            // Sea level pressure (hectopascals)
-    wind_direction int,         // Wind direction in degrees. 0-359
-    wind_speed double,          // Wind speed (meters per second)
-    sky_condition int,          // Total cloud cover (coded, see format documentation)
-    one_hour_precip double,     // One-hour accumulated liquid precipitation (millimeters)
-    six_hour_precip double,     // Six-hour accumulated liquid precipitation (millimeters)
+CREATE TABLE IF NOT EXISTS weather.hourly (
+    wsid text,
+    year int,
+    month int,
+    day int,
+    hour int,
+    temperature int,
+    dewpoint int,
+    pressure int,
+    wind_direction int,
+    wind_speed int,
+    sky_condition int,
+    one_hour_precip int,
+    six_hour_precip int,
     PRIMARY KEY ((wsid), year, month, day, hour)
 ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC, hour DESC);
 
@@ -26,9 +26,96 @@ CREATE TABLE IF NOT EXISTS "weather"."hourly" (
 --     country      TEXT,
 --     province     TEXT,
 --     icao         TEXT,
---     latitude     DOUBLE,
---     longitude    DOUBLE,
---     elevation    DOUBLE,
+--     latitude     int,
+--     longitude    int,
+--     elevation    int,
 --     begin_date   DATE,
 --     end_date     DATE
 -- );
+
+CREATE TABLE IF NOT EXISTS weather.daily (
+    wsid text,
+    year int,
+    month int,
+    day int,
+    n_records int,
+    temperature_avg int,
+    temperature_min int,
+    temperature_max int,
+    dewpoint_avg int,
+    dewpoint_min int,
+    dewpoint_max int,
+    pressure_avg int,
+    pressure_min int,
+    pressure_max int,
+    wind_direction int,
+    wind_speed_avg int,
+    wind_speed_min int,
+    wind_speed_max int,
+    sky_condition int,
+    one_hour_precipitation_avg int,
+    one_hour_precipitation_min int,
+    one_hour_precipitation_max int,
+    six_hour_precipitation_avg int,
+    six_hour_precipitation_min int,
+    six_hour_precipitation_max int,
+    precipitation int,
+    PRIMARY KEY ((wsid), year, month, day)
+) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC);
+
+CREATE TABLE IF NOT EXISTS weather.monthly (
+    wsid text,
+    year int,
+    month int,
+    n_records int,
+    temperature_avg int,
+    temperature_min int,
+    temperature_max int,
+    dewpoint_avg int,
+    dewpoint_min int,
+    dewpoint_max int,
+    pressure_avg int,
+    pressure_min int,
+    pressure_max int,
+    wind_direction int,
+    wind_speed_avg int,
+    wind_speed_min int,
+    wind_speed_max int,
+    sky_condition int,
+    one_hour_precipitation_avg int,
+    one_hour_precipitation_min int,
+    one_hour_precipitation_max int,
+    six_hour_precipitation_avg int,
+    six_hour_precipitation_min int,
+    six_hour_precipitation_max int,
+    precipitation int,
+    PRIMARY KEY ((wsid), year, month)
+) WITH CLUSTERING ORDER BY (year DESC, month DESC);
+
+CREATE TABLE IF NOT EXISTS weather.yearly (
+    wsid text,
+    year int,
+    n_records int,
+    temperature_avg int,
+    temperature_min int,
+    temperature_max int,
+    dewpoint_avg int,
+    dewpoint_min int,
+    dewpoint_max int,
+    pressure_avg int,
+    pressure_min int,
+    pressure_max int,
+    wind_direction int,
+    wind_speed_avg int,
+    wind_speed_min int,
+    wind_speed_max int,
+    sky_condition int,
+    one_hour_precipitation_avg int,
+    one_hour_precipitation_min int,
+    one_hour_precipitation_max int,
+    six_hour_precipitation_avg int,
+    six_hour_precipitation_min int,
+    six_hour_precipitation_max int,
+    precipitation int,
+    PRIMARY KEY ((wsid), year)
+) WITH CLUSTERING ORDER BY (year DESC);

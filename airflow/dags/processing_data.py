@@ -121,18 +121,80 @@ with process_data_workflow:
         ],
     )
 
-    # data_quality_check = BashOperator(
-    #     task_id='DataQualityCheck',
-    #     bash_command='''
-    #         echo "=== Data Quality Checks ==="
-    #         echo "Checking processed data for {{ ds }}"
-    #
-    #         # Add your data quality checks here
-    #         # Example: Check if output files exist, row counts, etc.
-    #
-    #         echo "✓ Data quality checks passed"
-    #         ''',
-    # )
+    daily = SparkSubmitOperator(
+        task_id='Daily',
+        application='app/daily.py',
+        packages=(
+            "org.apache.hadoop:hadoop-aws:3.3.4,"
+            "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
+            "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0,"
+            "com.github.jnr:jnr-posix:3.1.15"
+        ),
+        conf={
+            'spark.driver.memory': '2g',
+            'spark.executor.memory': '2g',
+            'spark.sql.adaptive.enabled': 'true',
+            'spark.sql.adaptive.coalescePartitions.enabled': 'true',
+            'spark.sql.files.maxPartitionBytes': '134217728',
+            'spark.cassandra.connection.host': 'cassandra',
+            'spark.cassandra.connection.port': '9042',
+        },
+        conn_id='spark_conn',
+        verbose=True,
+        application_args=[
+            '--year', '{{ data_interval_start.strftime("%Y") }}'
+        ],
+    )
+
+    monthly = SparkSubmitOperator(
+        task_id='Monthly',
+        application='app/monthly.py',
+        packages=(
+            "org.apache.hadoop:hadoop-aws:3.3.4,"
+            "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
+            "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0,"
+            "com.github.jnr:jnr-posix:3.1.15"
+        ),
+        conf={
+            'spark.driver.memory': '2g',
+            'spark.executor.memory': '2g',
+            'spark.sql.adaptive.enabled': 'true',
+            'spark.sql.adaptive.coalescePartitions.enabled': 'true',
+            'spark.sql.files.maxPartitionBytes': '134217728',
+            'spark.cassandra.connection.host': 'cassandra',
+            'spark.cassandra.connection.port': '9042',
+        },
+        conn_id='spark_conn',
+        verbose=True,
+        application_args=[
+            '--year', '{{ data_interval_start.strftime("%Y") }}'
+        ],
+    )
+
+    yearly = SparkSubmitOperator(
+        task_id='Yearly',
+        application='app/yearly.py',
+        packages=(
+            "org.apache.hadoop:hadoop-aws:3.3.4,"
+            "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
+            "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0,"
+            "com.github.jnr:jnr-posix:3.1.15"
+        ),
+        conf={
+            'spark.driver.memory': '2g',
+            'spark.executor.memory': '2g',
+            'spark.sql.adaptive.enabled': 'true',
+            'spark.sql.adaptive.coalescePartitions.enabled': 'true',
+            'spark.sql.files.maxPartitionBytes': '134217728',
+            'spark.cassandra.connection.host': 'cassandra',
+            'spark.cassandra.connection.port': '9042',
+        },
+        conn_id='spark_conn',
+        verbose=True,
+        application_args=[
+            '--year', '{{ data_interval_start.strftime("%Y") }}'
+        ],
+    )
 
     end = BashOperator(
         task_id='End',
@@ -159,4 +221,4 @@ with process_data_workflow:
     )
 
     # Task dependencies
-    start >> setup >> ingest_data  >> end
+    start >> setup >> ingest_data >> daily >> monthly >> yearly  >> end

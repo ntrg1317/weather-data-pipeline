@@ -57,14 +57,14 @@ schema = StructType([
     StructField("month", IntegerType(), False),
     StructField("day", IntegerType(), False),
     StructField("hour", IntegerType(), False),
-    StructField("temperature", DoubleType(), True),
-    StructField("dewpoint", DoubleType(), True),
-    StructField("pressure", DoubleType(), True),
+    StructField("temperature", IntegerType(), True),
+    StructField("dewpoint", IntegerType(), True),
+    StructField("pressure", IntegerType(), True),
     StructField("wind_direction", IntegerType(), True),
-    StructField("wind_speed", DoubleType(), True),
+    StructField("wind_speed", IntegerType(), True),
     StructField("sky_condition", IntegerType(), True),
-    StructField("one_hour_precip", DoubleType(), True),
-    StructField("six_hour_precip", DoubleType(), True),
+    StructField("one_hour_precip", IntegerType(), True),
+    StructField("six_hour_precip", IntegerType(), True),
 ])
 
 # -------------------- Read and Filter Data --------------------
