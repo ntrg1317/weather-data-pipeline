@@ -96,7 +96,7 @@ with process_data_workflow:
     
     ingest_data = SparkSubmitOperator(
         task_id='IngestRawData',
-        application='app/process_raw_data.py',
+        application='app/ingest.py',
         packages=(
             "org.apache.hadoop:hadoop-aws:3.3.4,"
             "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
@@ -104,8 +104,6 @@ with process_data_workflow:
             "com.github.jnr:jnr-posix:3.1.15"
         ),
         conf={
-            # 'spark.files': 'spark/data/secure-connect-weather-cluster.zip',
-            # 'spark.cassandra.connection.config.cloud.path': 'secure-connect-weather-cluster.zip',
             'spark.driver.memory': '2g',
             'spark.executor.memory': '2g',
             'spark.sql.adaptive.enabled': 'true',

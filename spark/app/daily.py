@@ -12,11 +12,7 @@ SPARK_APP_NAME = os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER = os.environ.get("SPARK_MASTER", "local[*]")
 BUCKET_NAME = os.environ.get("INPUT_BUCKET")
 
-ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
-
-MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT")
-MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY")
-MINIO_SECRET_KEY = os.environ.get("MINIO_SECRET_KEY")
+KEYSPACE = os.environ.get("KEYSPACE")
 
 #Get arguments
 parser = argparse.ArgumentParser()
@@ -49,7 +45,7 @@ spark = (
 
 df_hourly = spark.read \
     .format("org.apache.spark.sql.cassandra") \
-    .options(table="hourly", keyspace="weather") \
+    .options(table="hourly", keyspace=KEYSPACE) \
     .load() \
     .filter(col("year") == args.year) \
 
@@ -76,7 +72,7 @@ df_daily = df_hourly.groupBy("wsid", "year", "month", "day") \
 
         round(avg("sky_condition"), 0).alias("sky_condition"),
 
-        sum("precipitation").alias("precipitation"),
+        sum("one_hour_precip").alias("precipitation"),
         round(avg("one_hour_precip"), 0).alias("one_hour_precipitation_avg"),
         min("one_hour_precip").alias("one_hour_precipitation_min"),
         max("one_hour_precip").alias("one_hour_precipitation_max"),
@@ -88,6 +84,6 @@ df_daily = df_hourly.groupBy("wsid", "year", "month", "day") \
 
 df_daily.write \
     .format("org.apache.spark.sql.cassandra") \
-    .options(table="daily", keyspace=ASTRA_KEYSPACE) \
+    .options(table="daily", keyspace=KEYSPACE) \
     .mode("append") \
     .save()

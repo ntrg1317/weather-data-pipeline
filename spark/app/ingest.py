@@ -11,7 +11,6 @@ SPARK_APP_NAME = os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER = os.environ.get("SPARK_MASTER", "local[*]")
 BUCKET_NAME = os.environ.get("INPUT_BUCKET")
 
-ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
 
 MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT")
 MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY")

@@ -1,22 +1,15 @@
 import argparse
 import os
-import time
-import logging
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from pyspark.sql.types import *
 
 # Configuration
 SPARK_APP_NAME = os.environ.get("SPARK_APP_NAME")
 SPARK_MASTER = os.environ.get("SPARK_MASTER", "local[*]")
 BUCKET_NAME = os.environ.get("INPUT_BUCKET")
 
-ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
-
-MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT")
-MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY")
-MINIO_SECRET_KEY = os.environ.get("MINIO_SECRET_KEY")
+KEYSPACE = os.environ.get("KEYSPACE")
 
 #Get arguments
 parser = argparse.ArgumentParser()
@@ -39,8 +32,8 @@ spark = (
     .config("spark.cassandra.output.batch.grouping.buffer.size", "200")
 
     .config("spark.sql.files.maxPartitionBytes", "134217728")
-    .config("spark.cassandra.connection.timeout_ms", "30000")
-    .config("spark.cassandra.read.timeout_ms", "30000")
+    .config("spark.cassandra.connection.timeoutMS", "30000")
+    .config("spark.cassandra.read.timeoutMS", "30000")
 
     .getOrCreate()
 )
@@ -49,7 +42,7 @@ spark = (
 
 df_monthly= spark.read \
     .format("org.apache.spark.sql.cassandra") \
-    .options(table="monthly", keyspace="weather") \
+    .options(table="monthly", keyspace=KEYSPACE) \
     .load() \
     .filter(col("year") == args.year) \
 
@@ -87,7 +80,7 @@ df_yearly = df_monthly.groupBy("wsid", "year") \
 
 df_yearly.write \
     .format("org.apache.spark.sql.cassandra") \
-    .options(table="yearly", keyspace=ASTRA_KEYSPACE) \
+    .options(table="yearly", keyspace=KEYSPACE) \
     .mode("append") \
     .save()
 
