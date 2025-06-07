@@ -11,4 +11,3 @@ __pycache__/
 *.pyd
 cassandra
 !cassandra/*.cql
-airflow/data/raw/2014.csv.gz
