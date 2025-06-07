@@ -6,9 +6,8 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.apache.cassandra.hooks.cassandra import CassandraHook
-from cassandra.cqlengine.connection import session
 
-from ingest import downloader, postgresDb
+from ingest import downloader
 
 # Global variables
 DATA_DIR = f"{downloader.airflow_dir}/data/station"
