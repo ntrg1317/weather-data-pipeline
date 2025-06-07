@@ -1,5 +1,6 @@
 .venv
 airflow/logs
+airflow/data/raw
 .idea
 access
 .env
