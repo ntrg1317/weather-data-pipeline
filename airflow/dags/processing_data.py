@@ -6,12 +6,6 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.apache.cassandra.hooks.cassandra import CassandraHook
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
-# SECURE_CONNECT_BUNDLE_PATH = "/opt/airflow/spark/data/secure-connect-weather-cluster.zip"
-# SECURE_CONNECT_BUNDLE = os.environ.get("SECURE_CONNECT_BUNDLE", "secure-connect-weather-cluster.zip")
-# CLIENT_ID = os.environ.get("ASTRA_CLIENT_ID")
-# CLIENT_SECRET = os.environ.get("ASTRA_CLIENT_SECRET")
-# ASTRA_KEYSPACE = os.environ.get("ASTRA_KEYSPACE")
-
 CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST")
 CASSANDRA_PORT = os.environ.get("CASSANDRA_PORT")
 

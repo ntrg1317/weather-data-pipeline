@@ -14,6 +14,7 @@ x-common:
     - /var/run/docker.sock:/var/run/docker.sock
     - ./spark/app:/opt/airflow/app
     - ./spark/data:/opt/airflow/spark/data
+    - ./cassandra:/opt/airflow/cassandra
 
 x-depends-on:
   &depends-on
@@ -45,8 +46,6 @@ services:
       retries: 5
     env_file:
       - .env
-    volumes:
-      - ./postgres/init:/docker-entrypoint-initdb.d
     restart: always
 
   scheduler:
@@ -97,42 +96,6 @@ services:
     volumes:
       - ~/airflow/data:/data
     command: server /data --console-address ":9001"
-
-#  spark-master:
-#    image: bitnami/spark:3.4.1
-#    env_file:
-#      - .env
-#    environment:
-#      - SPARK_MODE=master
-#      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-#      - SPARK_RPC_ENCRYPTION_ENABLED=no
-#      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-#      - SPARK_SSL_ENABLED=no
-#    ports:
-#      - "9090:8080"
-#      - "7077:7077"
-#    volumes:
-#      - ./spark/app:/opt/spark/app
-#      - ./spark/data:/opt/spark/data
-#      - ./config:/opt/spark/config
-#
-#  spark-worker:
-#    image: bitnami/spark:3.4.1
-#    environment:
-#      - SPARK_MODE=worker
-#      - SPARK_MASTER_URL=spark://spark-master:7077
-#      - SPARK_WORKER_MEMORY=4g
-#      - SPARK_WORKER_CORES=4
-#      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-#      - SPARK_RPC_ENCRYPTION_ENABLED=no
-#      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-#      - SPARK_SSL_ENABLED=no
-#    volumes:
-#      - ./spark/app:/opt/spark/app
-#      - ./spark/data:/opt/spark/data
-#      - ./config:/opt/spark/config
-#    depends_on:
-#      - spark-master
 
   spark-master:
     <<: *spark-common

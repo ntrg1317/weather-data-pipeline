@@ -3,6 +3,7 @@ pandas
 boto3
 psycopg2-binary
 cassandra-driver
+cqlsh
 pyspark==3.5.5
 numpy
 requests
