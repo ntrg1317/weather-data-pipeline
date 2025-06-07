@@ -10,5 +10,5 @@ __pycache__/
 *.pyo
 *.pyd
 cassandra
-!cassandra/*.cql
-airflow/data/raw/2014.csv.bz2
+!cassandra/station.cql
+!cassandra/weather.cql
