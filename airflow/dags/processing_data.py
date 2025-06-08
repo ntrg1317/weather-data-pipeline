@@ -6,48 +6,23 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.apache.cassandra.hooks.cassandra import CassandraHook
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
+from ingest import downloader
+
 CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST")
 CASSANDRA_PORT = os.environ.get("CASSANDRA_PORT")
 
 def setup():
-    try:
-        hook = CassandraHook(cassandra_conn_id='cassandra_conn')
-        session = hook.get_conn()
+    hook = CassandraHook(cassandra_conn_id='cassandra_conn')
+    session = hook.get_conn()
 
-        # Create keyspace
-        session.execute("""
-        CREATE KEYSPACE IF NOT EXISTS weather
-        WITH REPLICATION = { 
-            'class' : 'SimpleStrategy', 
-            'replication_factor' : 1 
-            }
-        """)
+    station_schema = f"{downloader.airflow_dir}/cassandra/weather.cql"
+    with open(station_schema, 'r') as f:
+        statements = f.read().split(';')
+        for statement in statements:
+            if statement.strip():
+                session.execute(statement)
 
-        session.set_keyspace('weather')
-
-        session.execute("""
-        CREATE TABLE IF NOT EXISTS hourly (
-            wsid text,
-            year int,
-            month int,
-            day int,
-            hour int,
-            temperature double,
-            dewpoint double,
-            pressure double,
-            wind_direction int,
-            wind_speed double,
-            sky_condition int,
-            one_hour_precip double,
-            six_hour_precip double,
-            PRIMARY KEY ((wsid), year, month, day, hour)
-        ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC, hour DESC);
-        """)
-
-        logging.info("Cassandra keyspace and table setup completed")
-    except Exception as e:
-        logging.error("Error setting up Cassandra keyspace and table: %s", e)
-        raise
+    session.shutdown()
 
 default_args = {
     'owner': 'ntrg',

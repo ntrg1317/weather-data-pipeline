@@ -9,6 +9,6 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-cassandra
+cassandra/*
 !cassandra/station.cql
 !cassandra/weather.cql

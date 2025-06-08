@@ -4,6 +4,7 @@ import time
 import logging
 
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import to_timestamp, col
 from pyspark.sql.types import *
 
 # Configuration
@@ -15,6 +16,8 @@ BUCKET_NAME = os.environ.get("INPUT_BUCKET")
 MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT")
 MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.environ.get("MINIO_SECRET_KEY")
+
+KEYSPACE = os.environ.get("KEYSPACE")
 
 #Get arguments
 parser = argparse.ArgumentParser()
@@ -52,6 +55,7 @@ spark = (
 # -------------------- Schema Definition --------------------
 schema = StructType([
     StructField("wsid", StringType(), False),
+    StructField("timestamp", StringType(), False),
     StructField("year", IntegerType(), False),
     StructField("month", IntegerType(), False),
     StructField("day", IntegerType(), False),
@@ -69,13 +73,18 @@ schema = StructType([
 # -------------------- Read and Filter Data --------------------
 df = spark.read \
     .format("csv") \
-    .option("recursiveFileLookup", "true") \
     .option("compression", "bzip2") \
     .option("delimiter", ",") \
     .option("multiline", "false") \
     .option("escape", '"') \
+    .option("mode", "DROPMALFORMED") \
     .schema(schema) \
     .load(f"s3a://weather-hourly-raw/{args.year}.csv.bz2")
+
+df = df.withColumn("timestamp_parsed", to_timestamp("timestamp", "yyyy-MM-dd HH:mm:ss")) \
+       .filter(col("timestamp_parsed").isNotNull()) \
+       .drop("timestamp") \
+       .withColumnRenamed("timestamp_parsed", "timestamp")
 
 df.show()
 
@@ -89,7 +98,7 @@ try:
 
     df.write \
         .format("org.apache.spark.sql.cassandra") \
-        .option("keyspace", ASTRA_KEYSPACE) \
+        .option("keyspace", KEYSPACE) \
         .option("table", "hourly") \
         .mode("append") \
         .save()

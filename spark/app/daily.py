@@ -5,7 +5,6 @@ import logging
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from pyspark.sql.types import *
 
 # Configuration
 SPARK_APP_NAME = os.environ.get("SPARK_APP_NAME")
@@ -16,7 +15,7 @@ KEYSPACE = os.environ.get("KEYSPACE")
 
 #Get arguments
 parser = argparse.ArgumentParser()
-year = parser.add_argument('--year', type=int, required=True)
+parser.add_argument('--year', type=int, required=True)
 args = parser.parse_args()
 
 # -------------------- CREATE SparkSession --------------------
@@ -49,7 +48,8 @@ df_hourly = spark.read \
     .load() \
     .filter(col("year") == args.year) \
 
-df_daily = df_hourly.groupBy("wsid", "year", "month", "day") \
+df_daily = df_hourly \
+    .groupBy("wsid", "year", "month", "day") \
     .agg(
         count("hour").alias("n_records"),
 
@@ -80,7 +80,8 @@ df_daily = df_hourly.groupBy("wsid", "year", "month", "day") \
         round(avg("six_hour_precip"), 0).alias("six_hour_precipitation_avg"),
         min("six_hour_precip").alias("six_hour_precipitation_min"),
         max("six_hour_precip").alias("six_hour_precipitation_max")
-    )
+    ) \
+    .withColumn("timestamp", make_date(col("year"), col("month"), col("day")))
 
 df_daily.write \
     .format("org.apache.spark.sql.cassandra") \

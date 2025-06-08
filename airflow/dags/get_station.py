@@ -132,18 +132,14 @@ with (reload_station_workflow):
             awk -F',' 'BEGIN{{OFS=","}} 
             NR==1 {{ print "wsid,name,country,province,icao,latitude,longitude,elevation,begin_date,end_date"; next }}
             {{ 
-                gsub(/"/, "", $1);
-                gsub(/"/, "", $2);
-                wsid = $1 "-" $2; 
-                printf "%s", wsid; 
-                for (i=3; i<NF; i++) {{
-                    if (i == 8 && $i == "-0999") {{
-                        printf ",null"
-                    }} else {{
-                        printf ",%s", $i
-                    }}
-                }}
-                print ""
+                for (i=1; i<=NF; i++) gsub(/"/, "", $i);
+                wsid = $1 "-" $2;
+                begin_date = substr($10, 1, 4) "-" substr($10, 5, 2) "-" substr($10, 7, 2)
+                end_date = substr($11, 1, 4) "-" substr($11, 5, 2) "-" substr($11, 7, 2)
+    
+                elevation = ($9 == "-0999" ? "null" : $9);
+                printf "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\\n", \
+                    wsid, $3, $4, $5, $6, $7, $8, elevation, begin_date, end_date
             }}' | \
             gzip --best > {DATA_DIR}/tmp_station.csv.gz && \
             mv {DATA_DIR}/tmp_station.csv.gz {STATION_DATA}
@@ -157,18 +153,20 @@ with (reload_station_workflow):
             awk -F',' 'BEGIN{{OFS=","}}
             NR==1 {{ print "wsid,year,total,active_month,m1,m2,m3,m4,m5,m6,m7,m8,m9,m10,m11,m12"; next }}
             {{
-                gsub(/"/, "", $1);
-                gsub(/"/, "", $2);
-                wsid = $1 "-" $2
-                year = $3
-                total = 0
-                active_month = 0
+                for (i=1; i<=NF; i++) gsub(/"/, "", $i);
+                wsid = $1 "-" $2;
+                year = $3;
+
+                total = 0;
+                active_month = 0;
                 for (i=4; i<=15; i++) {{
-                    total += $i
-                    active_month += ($i != 0)
+                    val = ($i == "" ? 0 : $i);
+                    total += val;
+                    active_month += (val != 0 && val != "0" ? 1 : 0);
                 }}
-                printf "%s,%s,%d,%d", wsid, year, total, active_month
-                for (i=4; i<=15; i++) printf ",%s", $i
+
+                printf "%s,%s,%d,%d", wsid, year, total, active_month;
+                for (i=4; i<=15; i++) printf ",%s", $i;
                 print ""
             }} ' | \
             gzip --best > {DATA_DIR}/tmp_history.csv.gz && \
@@ -187,8 +185,9 @@ with (reload_station_workflow):
         bash_command=f"""
             gzip -dc {STATION_DATA} > {DATA_DIR}/tmp_station.csv && \
             cqlsh cassandra -k weather -e "
-                COPY station FROM '{DATA_DIR}/tmp_station.csv' 
-                WITH DELIMITER = ',' AND HEADER = TRUE;
+                COPY station (wsid, name, country, province, icao, latitude, longitude, elevation, begin_date, end_date) 
+                FROM '{DATA_DIR}/tmp_station.csv' 
+                WITH DELIMITER = ',' AND HEADER = TRUE
             "
         """,
     )
@@ -197,9 +196,14 @@ with (reload_station_workflow):
         task_id="IngestHistoryData",
         bash_command=f"""
             gzip -dc {HISTORY_DATA} > {DATA_DIR}/tmp_history.csv && \
-            cqlsh cassandra -k weather e "
-                COPY history FROM '{DATA_DIR}/tmp_history.csv' 
-                WITH DELIMITER = ',' AND HEADER = TRUE;
+            cqlsh cassandra -k weather -e "
+                COPY history (
+                    wsid, year, total, active_month,
+                    m1, m2, m3, m4, m5, m6,
+                    m7, m8, m9, m10, m11, m12
+                )
+                FROM '{DATA_DIR}/tmp_history.csv' 
+                WITH DELIMITER = ',' AND HEADER = TRUE
             "
         """,
     )

@@ -3,12 +3,13 @@ CREATE KEYSPACE IF NOT EXISTS weather WITH REPLICATION = { 'class' : 'SimpleStra
 
 CREATE TABLE IF NOT EXISTS weather.hourly (
     wsid TEXT,
+    timestamp TIMESTAMP,
     year INT,
     month INT,
     day INT,
     hour INT,
     temperature INT,
-    dewpoINT INT,
+    dewpoint INT,
     pressure INT,
     wind_direction INT,
     wind_speed INT,
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS weather.hourly (
 
 CREATE TABLE IF NOT EXISTS weather.daily (
     wsid TEXT,
+    timestamp TIMESTAMP,
     year INT,
     month INT,
     day INT,
@@ -50,6 +52,7 @@ CREATE TABLE IF NOT EXISTS weather.daily (
 
 CREATE TABLE IF NOT EXISTS weather.monthly (
     wsid TEXT,
+    timestamp TIMESTAMP,
     year INT,
     month INT,
     n_records INT,
@@ -79,6 +82,7 @@ CREATE TABLE IF NOT EXISTS weather.monthly (
 
 CREATE TABLE IF NOT EXISTS weather.yearly (
     wsid TEXT,
+    timestamp TIMESTAMP,
     year INT,
     n_records INT,
     temperature_avg INT,

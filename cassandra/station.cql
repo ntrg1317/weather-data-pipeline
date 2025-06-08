@@ -1,20 +1,21 @@
 CREATE TABLE IF NOT EXISTS weather.station (
-    wsid TEXT,
+    wsid TEXT PRIMARY KEY,
     name TEXT,
     country TEXT,
     province TEXT,
     icao TEXT,
-    latitude INT,
-    longitude INT,
-    elevation INT,
+    latitude DOUBLE,
+    longitude DOUBLE,
+    elevation DOUBLE,
     begin_date DATE,
-    end_date DATE,
-    PRIMARY KEY (wsid)
+    end_date DATE
 );
 
 CREATE TABLE IF NOT EXISTS weather.history (
     wsid TEXT,
-    year INT,
+    year TIMESTAMP,
+    total INT,
+    active_month INT,
     m1 INT,
     m2 INT,
     m3 INT,

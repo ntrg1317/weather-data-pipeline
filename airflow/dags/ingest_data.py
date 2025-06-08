@@ -112,42 +112,49 @@ def create_my_dag(**kwargs):
             task_id='AddPrefixAndCompress',
             do_xcom_push=False,
             bash_command=f"""
-                    # Get the list of files without extension
-                    FILES=$(find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.*")
+                set -euo pipefail  # Exit on any error
 
-                    parallel -j 12 '
-                        BASENAME=$(basename {{}})
-                        PREFIX=${{BASENAME//-{year}/}}
+                # Get the list of files without extension
+                FILES=$(find {RAW_FILES_DIRECTORY}/{year} -type f ! -name "*.*")
 
-                        TMPFILE=$(mktemp)
+                parallel -j 12 '
+                    BASENAME=$(basename {{}})
+                    PREFIX=${{BASENAME//-{year}/}}
 
-                        awk -v prefix="$PREFIX" \\
-                            "BEGIN {{ OFS=\\",\\" }}
-                            {{
-                                for (i=1; i<=NF; i++) {{
-                                    if (\\$i == \\"-9999\\") \\$i = \\"null\\"
-                                }}
-                                print prefix, \\$0
-                            }}" {{}} > $TMPFILE
-                        bzip2 -c $TMPFILE > {{}}.csv.bz2
-                        rm -f $TMPFILE
-                        rm -f {{}}
-                    ' ::: $FILES
-                """
+                    TMPFILE=$(mktemp)
+
+                    awk -v prefix="$PREFIX" \\
+                        "BEGIN {{ OFS=\\",\\" }}
+                        {{
+                            for (i=1; i<=NF; i++) {{
+                                if (\\$i == \\"-9999\\") \\$i = \\"null\\"
+                            }}
+                            print prefix, \\$0
+                        }}" {{}} > $TMPFILE
+                    bzip2 -c $TMPFILE > {{}}.csv.bz2
+                    rm -f $TMPFILE
+                    rm -f {{}}
+                ' ::: $FILES
+            """
         )
 
         task4 = BashOperator(
             task_id='CombineAndCompress',
             do_xcom_push=False,
             bash_command=f"""
-                    # Decompress all bzip2 files and combine them
-                    find {RAW_FILES_DIRECTORY}/{year} -name "*.csv.bz2" -exec bzcat {{}} \\; > {RAW_FILES_DIRECTORY}/{year}.csv
+                set -euo pipefail
         
-                    # Compress the combined file
-                    bzip2 -f {RAW_FILES_DIRECTORY}/{year}.csv
-        
-                    # Remove individual compressed files
-                    rm -rf {RAW_FILES_DIRECTORY}/{year}
+                YEAR_DIR="{RAW_FILES_DIRECTORY}/{year}"
+                FINAL_FILE="{RAW_FILES_DIRECTORY}/{year}.csv.bz2"
+                
+                TEMP_LIST=$(mktemp)
+                find "$YEAR_DIR" -name "*.csv.bz2" | sort > "$TEMP_LIST"
+                
+                # Direct concatenation of bz2 files
+                cat $(cat "$TEMP_LIST") > "$FINAL_FILE"
+                
+                # Clean up temp file
+                rm -f "$TEMP_LIST"
                 """
         )
 
@@ -160,7 +167,10 @@ def create_my_dag(**kwargs):
 
         task6 = BashOperator(
             task_id='Cleanup',
-            bash_command=f"rm -rf {RAW_FILES_DIRECTORY}/{year}.csv.bz2"
+            bash_command=f"""
+            rm -rf {RAW_FILES_DIRECTORY}/{year}.csv.bz2
+            rm -rf {RAW_FILES_DIRECTORY}/{year}
+            """
         )
 
         end = BashOperator(

@@ -1,0 +1,42 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "community",
+  "signedByOrg": "hadesarchitect",
+  "signedByOrgName": "hadesarchitect",
+  "plugin": "hadesarchitect-cassandra-datasource",
+  "version": "3.0.0",
+  "time": 1699296494552,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "plugin.json": "d5d31436e883580c95ee87b80d6421eeef031b23eabebaf00f8d18b9bb89c636",
+    "cassandra-plugin_linux_amd64": "7b6eedf620c45236916d1acd4a8d11e871aef528ab7e918c5089a7b15efe7cbf",
+    "LICENSE": "65b6092f1f311c776118c0f039b6ec8928931af9f3bc15ea493ecce87d1fa5ab",
+    "module.js.map": "e59f867cba9a7aff90f99eafb4bc185e744c2780482474d13d98c8b29b437add",
+    "cassandra-plugin_windows_amd64.exe": "c27b094171017c3737986a7a2476f31a7e803c78e000c32c72a9717e2eb8f0bb",
+    "cassandra-plugin_darwin_amd64": "b740de91852f6ae9077de89d6890e8df0797079d63227f0c5ba8d4de94c4ec9d",
+    "module.js": "31992db2d7a07b464f2d66919a41d05cf25eed0270ec64464cb388c5d91a6fa1",
+    "README.md": "fe9be7ef0c69f59cb7a669b2acd6752bac300f2e3b062bb850a99310c80af7d3",
+    "img/cassandra.svg": "5949151e09765f7d8cbbfcdd1589d396ec35abaa5a2965b8a428f610a755f047",
+    "img/editor.png": "c193ac6791a1fd73d64fdd3f33a9cbd4fcc1f19d19be8f2346ff953946d5da36",
+    "img/configurator.png": "c2365b4738d59a3883917af2bc17f0933ec888d1ac19f28cc216bdb67f05a01c",
+    "img/config.png": "d2a46c0dd65bdaf57d8b33cf8c103b46234518f2b87f140fa7b274dcbc74427f",
+    "img/suggestions.png": "be30abcce0f41a6b8a1c3f0d845f8a51b95631dff91a83743b1cd19f45d3de07",
+    "CHANGELOG.md": "46686bd06ebf2d13d7b7ed61e60136c3a5c311d3cba6713e2c08c3185cc951ec",
+    "cassandra-plugin_linux_arm64": "312fbdc573234480af9954a18073ce7455cb998aa8a211fa2bb9e80488744cbf"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.10
+Comment: https://openpgpjs.org
+
+wrgEARMKAAYFAmVJNO4AIQkQfk0ManCIZucWIQTzOyW2kQdOhGNlcPN+TQxq
+cIhm59pMAgkBTfME29DGmvmQL1hi2FvEXEmKPy40Wsxekh4AcXs73aYebLAg
+tBmnTpdDgaJyYft1Emqf4939GWW2okMLuoCoOnQCB1+JmTEx7iuIsyxP3UCl
+geOAxgxIiDtUFTE7++Kh/s1NWi9wEjRDVgM6sbzPdWZLwMteGnRuXH4ypO5q
+JMMFEsiz
+=HK6X
+-----END PGP SIGNATURE-----
