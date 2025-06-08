@@ -3,7 +3,6 @@ CREATE KEYSPACE IF NOT EXISTS weather WITH REPLICATION = { 'class' : 'SimpleStra
 
 CREATE TABLE IF NOT EXISTS weather.hourly (
     wsid TEXT,
-    timestamp TIMESTAMP,
     year INT,
     month INT,
     day INT,
@@ -16,12 +15,12 @@ CREATE TABLE IF NOT EXISTS weather.hourly (
     sky_condition INT,
     one_hour_precip INT,
     six_hour_precip INT,
+    timestamp TIMESTAMP,
     PRIMARY KEY ((wsid), year, month, day, hour)
 ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC, hour DESC);
 
 CREATE TABLE IF NOT EXISTS weather.daily (
     wsid TEXT,
-    timestamp TIMESTAMP,
     year INT,
     month INT,
     day INT,
@@ -47,12 +46,12 @@ CREATE TABLE IF NOT EXISTS weather.daily (
     six_hour_precipitation_min INT,
     six_hour_precipitation_max INT,
     precipitation INT,
+    timestamp TIMESTAMP,
     PRIMARY KEY ((wsid), year, month, day)
 ) WITH CLUSTERING ORDER BY (year DESC, month DESC, day DESC);
 
 CREATE TABLE IF NOT EXISTS weather.monthly (
     wsid TEXT,
-    timestamp TIMESTAMP,
     year INT,
     month INT,
     n_records INT,
@@ -77,12 +76,12 @@ CREATE TABLE IF NOT EXISTS weather.monthly (
     six_hour_precipitation_min INT,
     six_hour_precipitation_max INT,
     precipitation INT,
+    timestamp TIMESTAMP,
     PRIMARY KEY ((wsid), year, month)
 ) WITH CLUSTERING ORDER BY (year DESC, month DESC);
 
 CREATE TABLE IF NOT EXISTS weather.yearly (
     wsid TEXT,
-    timestamp TIMESTAMP,
     year INT,
     n_records INT,
     temperature_avg INT,
@@ -106,5 +105,6 @@ CREATE TABLE IF NOT EXISTS weather.yearly (
     six_hour_precipitation_min INT,
     six_hour_precipitation_max INT,
     precipitation INT,
+    timestamp TIMESTAMP,
     PRIMARY KEY ((wsid), year)
 ) WITH CLUSTERING ORDER BY (year DESC);

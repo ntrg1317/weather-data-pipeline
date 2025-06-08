@@ -4,7 +4,7 @@ import time
 import logging
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import to_timestamp, col
+from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
 # Configuration
@@ -41,21 +41,29 @@ spark = (
     # Cassandra configs
     .config("spark.cassandra.connection.host", "cassandra")
     .config("spark.cassandra.connection.port", "9042")
+
     # Configure Spark for Cassandra optimization
     .config("spark.cassandra.output.batch.size.rows", "200")
     .config("spark.cassandra.output.batch.size.bytes", "1048576")  # 5MB
     .config("spark.cassandra.output.concurrent.writes", "50")
     .config("spark.cassandra.output.batch.grouping.buffer.size", "200")
 
+    # Additional Cassandra optimizations
+    .config("spark.cassandra.connection.keep_alive_ms", "60000")
+    .config("spark.cassandra.output.consistency.level", "LOCAL_ONE") # If you can use eventual consistency
+    .config("spark.cassandra.connection.timeoutMS", "120000")
+    .config("spark.cassandra.read.timeoutMS", "120000")
+
     .config("spark.sql.files.maxPartitionBytes", "134217728")
 
     .getOrCreate()
 )
 
+spark.sparkContext.setLogLevel("WARN")
+
 # -------------------- Schema Definition --------------------
 schema = StructType([
     StructField("wsid", StringType(), False),
-    StructField("timestamp", StringType(), False),
     StructField("year", IntegerType(), False),
     StructField("month", IntegerType(), False),
     StructField("day", IntegerType(), False),
@@ -77,18 +85,16 @@ df = spark.read \
     .option("delimiter", ",") \
     .option("multiline", "false") \
     .option("escape", '"') \
-    .option("mode", "DROPMALFORMED") \
     .schema(schema) \
     .load(f"s3a://weather-hourly-raw/{args.year}.csv.bz2")
 
-df = df.withColumn("timestamp_parsed", to_timestamp("timestamp", "yyyy-MM-dd HH:mm:ss")) \
-       .filter(col("timestamp_parsed").isNotNull()) \
-       .drop("timestamp") \
-       .withColumnRenamed("timestamp_parsed", "timestamp")
+df = df.withColumn("timestamp", make_timestamp(col("year"), col("month"), col("day"), col("hour"), lit(0), lit(0))) \
+      .filter((col("year").isNotNull()) &
+              (col("month").isNotNull()) &
+              (col("day").isNotNull()) &
+              (col("hour").isNotNull()))
 
 df.show()
-
-df = df.na.drop(subset=["year", "month", "day", "hour"])
 
 df = df.repartition(200, "year", "month")
 

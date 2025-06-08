@@ -77,7 +77,8 @@ df_monthly = df_daily.groupBy("wsid", "year", "month") \
         round(avg("six_hour_precipitation_avg"), 0).alias("six_hour_precipitation_avg"),
         min("six_hour_precipitation_min").alias("six_hour_precipitation_min"),
         max("six_hour_precipitation_max").alias("six_hour_precipitation_max")
-    )
+    ) \
+    .withColumn("timestamp", make_date(col("year"), col("month"), lit(1)))
 
 df_monthly.write \
     .format("org.apache.spark.sql.cassandra") \
