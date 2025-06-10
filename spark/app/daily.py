@@ -47,6 +47,11 @@ df_hourly = spark.read \
     .options(table="hourly", keyspace=KEYSPACE) \
     .load() \
     .filter(col("year") == args.year) \
+    .select("wsid", "year", "month", "day", "hour",  # only necessary columns
+            "temperature", "dewpoint", "pressure",
+            "wind_direction", "wind_speed",
+            "sky_condition", "one_hour_precip",
+            "six_hour_precip")
 
 df_daily = df_hourly \
     .groupBy("wsid", "year", "month", "day") \

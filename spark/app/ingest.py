@@ -38,23 +38,13 @@ spark = (
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
     .config("spark.hadoop.fs.s3a.connection.ssl.enabled", "false")
 
-    # Cassandra configs
+    # Optimized Cassandra configs
     .config("spark.cassandra.connection.host", "cassandra")
     .config("spark.cassandra.connection.port", "9042")
-
-    # Configure Spark for Cassandra optimization
     .config("spark.cassandra.output.batch.size.rows", "200")
     .config("spark.cassandra.output.batch.size.bytes", "1048576")  # 5MB
     .config("spark.cassandra.output.concurrent.writes", "50")
     .config("spark.cassandra.output.batch.grouping.buffer.size", "200")
-
-    # Additional Cassandra optimizations
-    .config("spark.cassandra.connection.keep_alive_ms", "60000")
-    .config("spark.cassandra.output.consistency.level", "LOCAL_ONE") # If you can use eventual consistency
-    .config("spark.cassandra.connection.timeoutMS", "120000")
-    .config("spark.cassandra.read.timeoutMS", "120000")
-
-    .config("spark.sql.files.maxPartitionBytes", "134217728")
 
     .getOrCreate()
 )
@@ -96,7 +86,7 @@ df = df.withColumn("timestamp", make_timestamp(col("year"), col("month"), col("d
 
 df.show()
 
-df = df.repartition(200, "year", "month")
+df = df.repartition(200, "wsid")
 
 # -------------------- Write to Cassadra --------------------
 try:

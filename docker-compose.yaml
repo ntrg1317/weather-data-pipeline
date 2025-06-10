@@ -37,15 +37,16 @@ x-spark-common:
 services:
   postgres:
     image: postgis/postgis:13-3.1
-    container_name: postgres
-    ports:
-      - "5432:5432"
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
       retries: 5
-    env_file:
-      - .env
     restart: always
 
   scheduler:
@@ -138,7 +139,7 @@ services:
       HEAP_NEWSIZE: 800M
     restart: unless-stopped
     volumes:
-      - ./cassandra:/var/lib/cassandra
+      - cassandra_data:/var/lib/cassandra
     ports:
       - "9042:9042"
   grafana:
@@ -155,3 +156,5 @@ services:
 
 volumes:
   grafana_data:
+  postgres-db-volume:
+  cassandra_data:

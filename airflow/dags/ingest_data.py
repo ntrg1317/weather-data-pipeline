@@ -2,6 +2,7 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.utils.dates import days_ago
 
 #External modules
@@ -77,11 +78,6 @@ def create_my_dag(**kwargs):
         max_active_runs=2
     ) as dag:
         year = '{{ data_interval_start.strftime("%Y") }}'
-
-        start = BashOperator(
-            task_id='Start',
-            bash_command='echo "Start downloading historical data"',
-        )
 
         task1 = PythonOperator(
             task_id='Download',
@@ -173,12 +169,17 @@ def create_my_dag(**kwargs):
             """
         )
 
-        end = BashOperator(
-            task_id='End',
-            bash_command='echo "Upload raw data to MinIO successfully!"',
-        )
+        if kwargs['dag_id'] == 'DailyData':
+            trigger_process_daily = TriggerDagRunOperator(
+                task_id="TriggerProcessDaily",
+                trigger_dag_id="ProcessDailyData",
+                execution_date="{{ ds }}",
+                reset_dag_run=True,
+                wait_for_completion=False,
+            )
+            task6 >> trigger_process_daily
 
-    chain(start, task1, task2, task3, task4, task5, task6, end)
+    chain(task1, task2, task3, task4, task5, task6)
     return dag
 
 # Create DAGs with different schedule intervals

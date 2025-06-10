@@ -133,9 +133,11 @@ with (reload_station_workflow):
             NR==1 {{ print "wsid,name,country,province,icao,latitude,longitude,elevation,begin_date,end_date"; next }}
             {{ 
                 for (i=1; i<=NF; i++) gsub(/"/, "", $i);
+                if ($4 == "") next;
+                
                 wsid = $1 "-" $2;
-                begin_date = substr($10, 1, 4) "-" substr($10, 5, 2) "-" substr($10, 7, 2)
-                end_date = substr($11, 1, 4) "-" substr($11, 5, 2) "-" substr($11, 7, 2)
+                begin_date = substr($10, 1, 4) "-" substr($10, 5, 2) "-" substr($10, 7, 2);
+                end_date = substr($11, 1, 4) "-" substr($11, 5, 2) "-" substr($11, 7, 2);
     
                 elevation = ($9 == "-0999" ? "null" : $9);
                 printf "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\\n", \
@@ -187,7 +189,7 @@ with (reload_station_workflow):
             cqlsh cassandra -k weather -e "
                 COPY station (wsid, name, country, province, icao, latitude, longitude, elevation, begin_date, end_date) 
                 FROM '{DATA_DIR}/tmp_station.csv' 
-                WITH DELIMITER = ',' AND HEADER = TRUE
+                WITH DELIMITER = ',' AND HEADER = TRUE AND NULL='null'
             "
         """,
     )
