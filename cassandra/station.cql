@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS station.country (
     wsid TEXT,
     iso3 TEXT,
     iso2 TEXT,
-    is_independent BOOLEAN,
+    is_independent TEXT,
     official_name_en TEXT,
     region TEXT,
     sub_region TEXT,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS station.station_by_start_date(
     PRIMARY KEY ( (year, month), wsid )
 ) WITH CLUSTERING ORDER BY (wsid ASC);
 
-CREATE TABLE IF NOT EXISTS station.station_by_start_date(
+CREATE TABLE IF NOT EXISTS station.station_by_end_date(
     year INT,
     month INT,
     wsid TEXT,
@@ -76,6 +76,6 @@ CREATE TABLE IF NOT EXISTS station.station_by_start_date(
     latitude DOUBLE,
     longitude DOUBLE,
     elevation DOUBLE,
-    begin_date DATE,
+    end_date DATE,
     PRIMARY KEY ( (year, month), wsid )
 ) WITH CLUSTERING ORDER BY (wsid ASC);

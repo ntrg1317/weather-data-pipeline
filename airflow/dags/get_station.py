@@ -5,6 +5,7 @@ from datetime import timedelta, datetime
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.providers.apache.cassandra.hooks.cassandra import CassandraHook
 
 from ingest import downloader
@@ -53,12 +54,22 @@ def download_file(data_url, data_file):
     os.makedirs(os.path.dirname(data_file), exist_ok=True)
     os.system(f"curl -s {data_url} -o {data_file}")
 
-def generate_compressed_files():
-    os.system(f"cat {STATION_FILE} | gzip --best > {STATION_DATA}")
-    os.system(f"cat {HISTORY_FILE} | gzip -d | gzip --best > {HISTORY_DATA}")
-    logging.info("Generated compressed files: %s, %s", STATION_DATA, HISTORY_DATA)
-
 def setup():
+    """
+    Sets up the Cassandra database by executing statements defined in a schema file.
+    This function reads a Cassandra query schema file, splits it into individual
+    statements, and executes them on the Cassandra database using a session.
+
+    The function utilizes a CassandraHook to establish a connection to the Cassandra
+    database. After processing the schema file and executing all non-empty statements,
+    the session is appropriately shut down.
+
+    :param downloader.airflow_dir: The root directory of the Airflow downloader.
+    :type downloader.airflow_dir: str
+
+    :return: None
+    :rtype: None
+    """
     hook = CassandraHook(cassandra_conn_id='cassandra_conn')
     session = hook.get_conn()
 
@@ -71,13 +82,7 @@ def setup():
 
     session.shutdown()
 
-def ingest_data(table, query, filepath):
-    """Ingest station data into a temporary table."""
-    hook = CassandraHook(cassandra_conn_id='cassandra_conn')
-    session = hook.get_conn()
-
 # Define the DAG
-
 default_args = {
     'owner': 'ntrg',
     'retries': 3,
@@ -187,7 +192,7 @@ with (reload_station_workflow):
         task_id="IngestStationData",
         bash_command=f"""
             gzip -dc {STATION_DATA} > {DATA_DIR}/tmp_station.csv && \
-            cqlsh cassandra -k weather -e "
+            cqlsh cassandra -k station -e "
                 COPY station (wsid, name, country, province, icao, latitude, longitude, elevation, begin_date, end_date) 
                 FROM '{DATA_DIR}/tmp_station.csv' 
                 WITH DELIMITER = ',' AND HEADER = TRUE AND NULL='null'
@@ -199,7 +204,7 @@ with (reload_station_workflow):
         task_id="IngestHistoryData",
         bash_command=f"""
             gzip -dc {HISTORY_DATA} > {DATA_DIR}/tmp_history.csv && \
-            cqlsh cassandra -k weather -e "
+            cqlsh cassandra -k station -e "
                 COPY history (
                     wsid, year, total, active_month,
                     m1, m2, m3, m4, m5, m6,
@@ -211,5 +216,13 @@ with (reload_station_workflow):
         """,
     )
 
+    trigger_process = TriggerDagRunOperator(
+        task_id="TriggerProcessData",
+        trigger_dag_id="ProcessStationData",
+        execution_date="{{ ds }}",
+        reset_dag_run=True,
+        wait_for_completion=False,
+    )
+
     # Task dependencies
-    task1 >> [task2, task3] >> task4 >> [task5, task6] >> task7 >> [task8, task9]
+    task1 >> [task2, task3] >> task4 >> [task5, task6] >> task7 >> [task8, task9] >> trigger_process
