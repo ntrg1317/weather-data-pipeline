@@ -90,7 +90,8 @@ reload_station_workflow = DAG(
     schedule_interval="@daily",
     dagrun_timeout=timedelta(minutes=60),
     start_date=datetime(2025, 5, 13),
-    catchup=False
+    catchup=False,
+    tags=['weather', 'data-ingestion', 'station', 'daily'],
 )
 
 with (reload_station_workflow):
