@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS station.history (
 ) WITH CLUSTERING ORDER BY (year DESC);
 
 CREATE TABLE IF NOT EXISTS station.country (
-    fips TEXT,
+    country TEXT,
     wsid TEXT,
     iso3 TEXT,
     iso2 TEXT,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS station.country (
     latitude DOUBLE,
     longitude DOUBLE,
     elevation DOUBLE,
-    PRIMARY KEY ( (fips), wsid )
+    PRIMARY KEY ( (country), wsid )
 ) WITH CLUSTERING ORDER BY (wsid ASC);
 
 CREATE TABLE IF NOT EXISTS station.station_by_start_date(

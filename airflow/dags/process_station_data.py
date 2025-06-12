@@ -115,7 +115,7 @@ def q1_modeling(**context):
     station_df = pd.DataFrame(station.all())
 
     station_by_country = pd.merge(station_df, country_df, left_on='country', right_on='fips', how='inner')
-    station_by_country = station_by_country[["fips", "wsid", "iso3", "iso2", "is_independent", "official_name_en",
+    station_by_country = station_by_country[["country", "wsid", "iso3", "iso2", "is_independent", "official_name_en",
                                              "region", "sub_region", "capital", "continent", "currency", "name",
                                              "province", "icao", "latitude", "longitude", "elevation"]]
 
