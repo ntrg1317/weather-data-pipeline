@@ -11,7 +11,7 @@ A comprehensive data pipeline that collects, processes, and visualizes weather d
 2. Install [Docker Compose](https://docs.docker.com/compose/).
 
 ### Steps
-1. Clone the repository:
+1. **Clone the repository**
    ```bash
    git clone git@github.com:ntrg1317/weather-pipeline.git
    cd weather-pipeline
@@ -28,13 +28,24 @@ A comprehensive data pipeline that collects, processes, and visualizes weather d
      - Spark configurations
      - Cassandra connection details
 
-
 3. **Deploy Services**
    ```bash
    docker compose up --build
    ```
-   
-4. Access the services:
+4. **Install Grafana Cassandra Plugin**
+   ```bash
+   # Access the Grafana container
+   docker exec -it grafana /bin/bash
+
+   # Install Cassandra plugin
+   grafana-cli plugins install hadesarchitect-cassandra-datasource
+
+   # Restart Grafana container to apply changes
+   docker restart grafana
+   ```
+
+
+5. **Access the services**
    - Airflow: [http://localhost:8080](http://localhost:8080)
    - Spark: [http://localhost:9090](http://localhost:9090)
    - MinIO: [http://localhost:9000](http://localhost:9000)
