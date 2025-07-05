@@ -44,12 +44,7 @@ df_hourly = spark.read \
     .format("org.apache.spark.sql.cassandra") \
     .options(table="hourly", keyspace=KEYSPACE) \
     .load() \
-    .filter(col("year") == args.year) \
-    .select("wsid", "year", "month", "day", "hour",  # only necessary columns
-            "temperature", "dewpoint", "pressure",
-            "wind_direction", "wind_speed",
-            "sky_condition", "one_hour_precip",
-            "six_hour_precip")
+    .filter(col("year") == args.year)
 
 df_daily = df_hourly \
     .groupBy("wsid", "year", "month", "day") \

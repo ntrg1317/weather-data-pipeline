@@ -30,6 +30,12 @@ spark = (
     .appName(SPARK_APP_NAME)
     .master(SPARK_MASTER)
 
+    .config("spark.hadoop.fs.s3a.connection.timeout", "60000")  # 60s
+    .config("spark.hadoop.fs.s3a.connection.establish.timeout", "60000")
+    .config("spark.hadoop.fs.s3a.connection.request.timeout", "60000")
+    .config("spark.hadoop.fs.s3a.attempts.maximum", "3")
+    .config("spark.hadoop.fs.s3a.retry.limit", "3")
+
     # MinIO configs
     .config("spark.hadoop.fs.s3a.endpoint", MINIO_ENDPOINT)
     .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY)

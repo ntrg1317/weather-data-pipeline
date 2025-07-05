@@ -26,7 +26,7 @@ x-depends-on:
 
 x-spark-common:
   &spark-common
-  image: bitnami/spark:latest
+  image: bitnami/spark:3.5.5
   environment:
     - PYSPARK_PYTHON=/usr/bin/python3.10
     - PYSPARK_DRIVER_PYTHON=/usr/bin/python3.10
@@ -95,7 +95,7 @@ services:
       MINIO_ROOT_USER: root
       MINIO_ROOT_PASSWORD: trangnt1317
     volumes:
-      - ~/airflow/data:/data
+      - ~/minio/data:/data
     command: server /data --console-address ":9001"
 
   spark-master:
@@ -153,7 +153,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/plugins:/var/lib/grafana/plugins
-
+      - ./grafana/provisioning:/etc/grafana/provisioning
 volumes:
   grafana_data:
   postgres-db-volume:

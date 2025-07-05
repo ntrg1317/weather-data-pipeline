@@ -102,6 +102,10 @@ def upload_multiple(list_of_files):
 def upload_single(filepath):
     filename = filepath.strip('/').split('/')[-1]
     try:
+        if not MINIO_CLI.bucket_exists(BUCKET_NAME):
+            MINIO_CLI.make_bucket(BUCKET_NAME)
+            logging.info(f"Created bucket: {BUCKET_NAME}")
+
         MINIO_CLI.fput_object(BUCKET_NAME, filename, filepath)
     except Exception as e:
         logging.error("ERROR: %s", e)
