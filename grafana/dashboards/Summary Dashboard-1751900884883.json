@@ -1,0 +1,5659 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 4,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "panels": [],
+      "title": "Meta Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Observation Hours",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 20,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, year, month, day, hour FROM weather.hourly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "hour"
+              ]
+            }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "count"
+            ]
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Observation Days",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 20,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, year, month, day FROM weather.daily WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "day"
+              ]
+            }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "count"
+            ]
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid",
+            "substringEnd": 13,
+            "substringStart": 7
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Elevation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "longitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Longitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "begin_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "First Seen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "end_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Last Seen"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT  latitude FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 2",
+            "substringEnd": 13,
+            "substringStart": 7
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "begin_date",
+            "timezone": "utc",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 1",
+            "substringEnd": 6
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "end_date",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Elevation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "longitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Longitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "begin_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "First Seen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "end_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Last Seen"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT longitude FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 2",
+            "substringEnd": 13,
+            "substringStart": 7
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "begin_date",
+            "timezone": "utc",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 1",
+            "substringEnd": 6
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "end_date",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Elevation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "longitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Longitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "begin_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "First Seen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "end_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Last Seen"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT end_date FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 2",
+            "substringEnd": 13,
+            "substringStart": 7
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "begin_date",
+            "timezone": "utc",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 1",
+            "substringEnd": 6
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "end_date",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Observation Months",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 5
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 20,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, year, month FROM weather.monthly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "month"
+              ]
+            }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "count"
+            ]
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Observation Years",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 5
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 20,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, year FROM weather.yearly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "year"
+              ]
+            }
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "labelsToFields": false,
+            "mode": "reduceFields",
+            "reducers": [
+              "count"
+            ]
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 5
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid",
+            "substringEnd": 6
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "official_name_en"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Country"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "capital"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Capital"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sub_region"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Sub Region"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "region"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Region"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "continent"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Continent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 5
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 25
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT country, official_name_en FROM station.country WHERE wsid = '${station}' ALLOW FILTERING;"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "capital",
+                "sub_region",
+                "region",
+                "continent",
+                "official_name_en"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Elevation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "longitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Longitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "begin_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "First Seen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "end_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Last Seen"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 5
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT elevation FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "USAF"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wsid 2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "WBAN"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "elevation"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Elevation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "latitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Latitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "longitude"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Longitude"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "begin_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "First Seen"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "end_date"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Last Seen"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT begin_date FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 2",
+            "substringEnd": 13,
+            "substringStart": 7
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "begin_date",
+            "timezone": "utc",
+            "useTimezone": true
+          }
+        },
+        {
+          "id": "formatString",
+          "options": {
+            "outputFormat": "Substring",
+            "stringField": "wsid 1",
+            "substringEnd": 6
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM-DD",
+            "timeField": "end_date",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Location",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Station Name",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 11,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 30,
+          "valueSize": 30
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT name FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 11,
+        "y": 10
+      },
+      "id": 13,
+      "options": {
+        "basemap": {
+          "config": {
+            "server": "topo"
+          },
+          "name": "Layer 0",
+          "type": "xyz"
+        },
+        "controls": {
+          "mouseWheelZoom": true,
+          "showAttribution": true,
+          "showDebug": false,
+          "showMeasure": false,
+          "showScale": false,
+          "showZoom": true
+        },
+        "layers": [
+          {
+            "config": {
+              "showLegend": true,
+              "style": {
+                "color": {
+                  "fixed": "dark-red"
+                },
+                "opacity": 1,
+                "rotation": {
+                  "fixed": 0,
+                  "max": 360,
+                  "min": -360,
+                  "mode": "mod"
+                },
+                "size": {
+                  "fixed": 5,
+                  "max": 15,
+                  "min": 2
+                },
+                "symbol": {
+                  "fixed": "img/icons/marker/x-mark.svg",
+                  "mode": "fixed"
+                },
+                "symbolAlign": {
+                  "horizontal": "center",
+                  "vertical": "center"
+                },
+                "textConfig": {
+                  "fontSize": 12,
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "textAlign": "center",
+                  "textBaseline": "middle"
+                }
+              }
+            },
+            "filterData": {
+              "id": "byRefId",
+              "options": "A"
+            },
+            "location": {
+              "latitude": "latitude",
+              "longitude": "longitude",
+              "mode": "coords"
+            },
+            "name": "Layer 1",
+            "tooltip": true,
+            "type": "markers"
+          }
+        ],
+        "tooltip": {
+          "mode": "details"
+        },
+        "view": {
+          "allLayers": true,
+          "id": "fit",
+          "lat": 0,
+          "lon": 0,
+          "zoom": 15
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, elevation, latitude, longitude, begin_date, end_date FROM station.station WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "",
+      "type": "geomap"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "official_name_en"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Country"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "capital"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Capital"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sub_region"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Sub Region"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "region"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Region"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "continent"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Continent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 11,
+        "x": 0,
+        "y": 12
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "text": {
+          "titleSize": 25,
+          "valueSize": 25
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT country, official_name_en, capital, sub_region, region, continent FROM station.country WHERE wsid = '${station}' ALLOW FILTERING;"
+        }
+      ],
+      "title": "",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "capital",
+                "sub_region",
+                "region",
+                "continent",
+                "official_name_en"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 17,
+      "panels": [],
+      "title": "Summary",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "year"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Year"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/m.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text",
+                  "wrapText": false
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-RdYlGr"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m2"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Feb"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m3"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Mar"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m4"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Apr"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m5"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "May"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m6"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Jun"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m7"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Jul"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m8"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Aug"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m9"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Sep"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m10"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Oct"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m11"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Nov"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m12"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Dec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "m1"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Jan"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Year"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 61
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Jan"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 50
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Feb"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 52
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mar"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 53
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Apr"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 50
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "May"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 48
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Jun"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 55
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Jul"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 47
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Aug"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 46
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Sep"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 48
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Oct"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 33
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Nov"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 57
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 11,
+        "x": 0,
+        "y": 19
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, year, m1, m2, m3,m4, m5, m6, m7, m8,m9, m10, m11, m12 FROM station.history WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Observations",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "year",
+                "active_month",
+                "m1",
+                "m2",
+                "m3",
+                "m4",
+                "m5",
+                "m6",
+                "m7",
+                "m8",
+                "m9",
+                "m10",
+                "m11",
+                "m12"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Temp"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Temp"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Temp"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "precipitation / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Precipitation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthmm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 11,
+        "y": 19
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid,\ntemperature_avg / 10.0,\n    temperature_min / 10.0,\n    temperature_max / 10.0,\n    dewpoint_avg / 10.0,\n    dewpoint_min / 10.0,\n    dewpoint_max / 10.0,\n    pressure_avg / 10.0,\n    pressure_min / 10.0,\n    pressure_max / 10.0,\n    wind_speed_avg / 10.0,\n    wind_speed_min / 10.0,\n    wind_speed_max / 10.0,\n    precipitation/ 10.0\nFROM weather.yearly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Yearly Summary",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "temperature_avg / 10.0",
+                "temperature_min / 10.0",
+                "temperature_max / 10.0",
+                "dewpoint_avg / 10.0",
+                "dewpoint_min / 10.0",
+                "dewpoint_max / 10.0",
+                "pressure_avg / 10.0",
+                "pressure_min / 10.0",
+                "wind_direction / 10.0",
+                "pressure_max / 10.0",
+                "wind_speed_avg / 10.0",
+                "one_hour_precipitation_max / 10.0",
+                "wind_speed_min / 10.0",
+                "six_hour_precipitation_avg / 10.0",
+                "wind_speed_max / 10.0",
+                "six_hour_precipitation_min / 10.0",
+                "one_hour_precipitation_avg / 10.0",
+                "six_hour_precipitation_max / 10.0",
+                "one_hour_precipitation_min / 10.0",
+                "precipitation / 10.0"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Temp"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "precipitation / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Precipitation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthmm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_direction"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Wind Direction"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0,
+                      "result": {
+                        "index": 0,
+                        "text": "↑"
+                      },
+                      "to": 22.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 22.5,
+                      "result": {
+                        "index": 1,
+                        "text": "↗"
+                      },
+                      "to": 67.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 67.5,
+                      "result": {
+                        "index": 2,
+                        "text": "→"
+                      },
+                      "to": 112.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 112.5,
+                      "result": {
+                        "index": 3,
+                        "text": "↘"
+                      },
+                      "to": 157.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 157.5,
+                      "result": {
+                        "index": 4,
+                        "text": "↓"
+                      },
+                      "to": 202.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 202.5,
+                      "result": {
+                        "index": 5,
+                        "text": "↙"
+                      },
+                      "to": 247.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 247.5,
+                      "result": {
+                        "index": 6,
+                        "text": "←"
+                      },
+                      "to": 292.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 292.5,
+                      "result": {
+                        "index": 7,
+                        "text": "↖"
+                      },
+                      "to": 337.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 337.5,
+                      "result": {
+                        "index": 8,
+                        "text": "↑"
+                      },
+                      "to": 360
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sky_condition"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "☀️ Clear sky"
+                      },
+                      "1": {
+                        "color": "dark-orange",
+                        "index": 1,
+                        "text": "🌤️ Mostly clear (sun with tiny cloud)"
+                      },
+                      "2": {
+                        "color": "orange",
+                        "index": 2,
+                        "text": "🌤️ Few clouds"
+                      },
+                      "7": {
+                        "color": "blue",
+                        "index": 5,
+                        "text": "🌥️ Mostly cloudy"
+                      },
+                      "8": {
+                        "color": "green",
+                        "index": 6,
+                        "text": "☁️ Overcast"
+                      },
+                      "9": {
+                        "color": "super-light-blue",
+                        "index": 7,
+                        "text": "🌫️ Foggy / Obscured sky"
+                      },
+                      "10": {
+                        "color": "super-light-blue",
+                        "index": 8,
+                        "text": "🌫️ Hazy / Obscured partial"
+                      },
+                      "11": {
+                        "color": "super-light-yellow",
+                        "index": 9,
+                        "text": "🌤️ Thin clouds"
+                      },
+                      "12": {
+                        "color": "blue",
+                        "index": 10,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "13": {
+                        "color": "dark-blue",
+                        "index": 11,
+                        "text": "🌧️ Dark clouds scattered"
+                      },
+                      "14": {
+                        "color": "super-light-yellow",
+                        "index": 12,
+                        "text": "🌥️ Mostly cloudy thin"
+                      },
+                      "15": {
+                        "color": "blue",
+                        "index": 13,
+                        "text": "⛅ Partly cloudy"
+                      },
+                      "16": {
+                        "color": "dark-blue",
+                        "index": 14,
+                        "text": "🌧️ Mostly cloudy with dark clouds"
+                      },
+                      "17": {
+                        "color": "green",
+                        "index": 15,
+                        "text": "☁️ Thin overcast"
+                      },
+                      "18": {
+                        "color": "green",
+                        "index": 16,
+                        "text": "☁️ Overcast"
+                      },
+                      "19": {
+                        "color": "dark-purple",
+                        "index": 17,
+                        "text": "🌩️ Heavy overcast / stormy"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "from": 3,
+                      "result": {
+                        "color": "blue",
+                        "index": 3,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "to": 4
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "blue",
+                        "index": 4,
+                        "text": "⛅ Partly cloudy"
+                      },
+                      "to": 6
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "displayName",
+                "value": "Sky Condition"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Average Temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 10
+                    },
+                    {
+                      "color": "#EF843C",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 16,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, temperature_avg / 10.0, temperature_min/10.0, temperature_max/10.0, dewpoint_avg/ 10.0, dewpoint_min/10.0, dewpoint_max/10.0, pressure_avg/ 10.0,pressure_min/10.0, pressure_max/10.0, wind_direction, wind_speed_avg/ 10.0, wind_speed_min/10.0, wind_speed_max/10.0, sky_condition, precipitation/ 10.0\nFROM weather.yearly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Daily Summary",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "temperature_avg / 10.0",
+                "dewpoint_avg / 10.0",
+                "pressure_avg / 10.0",
+                "wind_direction",
+                "wind_speed_avg / 10.0",
+                "sky_condition",
+                "precipitation / 10.0",
+                "dewpoint_min / 10.0",
+                "dewpoint_max / 10.0",
+                "temperature_min / 10.0",
+                "temperature_max / 10.0",
+                "pressure_min / 10.0",
+                "pressure_max / 10.0",
+                "wind_speed_min / 10.0",
+                "wind_speed_max / 10.0"
+              ]
+            }
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY",
+            "timeField": "timestamp",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Temp"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Dewpoint"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 10
+                    },
+                    {
+                      "color": "orange",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Pressure"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "precipitation / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Precipitation"
+              },
+              {
+                "id": "unit",
+                "value": "lengthmm"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_direction"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Wind Direction"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "from": 0,
+                      "result": {
+                        "index": 0,
+                        "text": "↑"
+                      },
+                      "to": 22.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 22.5,
+                      "result": {
+                        "index": 1,
+                        "text": "↗"
+                      },
+                      "to": 67.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 67.5,
+                      "result": {
+                        "index": 2,
+                        "text": "→"
+                      },
+                      "to": 112.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 112.5,
+                      "result": {
+                        "index": 3,
+                        "text": "↘"
+                      },
+                      "to": 157.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 157.5,
+                      "result": {
+                        "index": 4,
+                        "text": "↓"
+                      },
+                      "to": 202.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 202.5,
+                      "result": {
+                        "index": 5,
+                        "text": "↙"
+                      },
+                      "to": 247.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 247.5,
+                      "result": {
+                        "index": 6,
+                        "text": "←"
+                      },
+                      "to": 292.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 292.5,
+                      "result": {
+                        "index": 7,
+                        "text": "↖"
+                      },
+                      "to": 337.5
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 337.5,
+                      "result": {
+                        "index": 8,
+                        "text": "↑"
+                      },
+                      "to": 360
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-GrYlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sky_condition"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "☀️ Clear sky"
+                      },
+                      "1": {
+                        "color": "dark-orange",
+                        "index": 1,
+                        "text": "🌤️ Mostly clear (sun with tiny cloud)"
+                      },
+                      "2": {
+                        "color": "orange",
+                        "index": 2,
+                        "text": "🌤️ Few clouds"
+                      },
+                      "7": {
+                        "color": "blue",
+                        "index": 5,
+                        "text": "🌥️ Mostly cloudy"
+                      },
+                      "8": {
+                        "color": "green",
+                        "index": 6,
+                        "text": "☁️ Overcast"
+                      },
+                      "9": {
+                        "color": "super-light-blue",
+                        "index": 7,
+                        "text": "🌫️ Foggy / Obscured sky"
+                      },
+                      "10": {
+                        "color": "super-light-blue",
+                        "index": 8,
+                        "text": "🌫️ Hazy / Obscured partial"
+                      },
+                      "11": {
+                        "color": "super-light-yellow",
+                        "index": 9,
+                        "text": "🌤️ Thin clouds"
+                      },
+                      "12": {
+                        "color": "blue",
+                        "index": 10,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "13": {
+                        "color": "dark-blue",
+                        "index": 11,
+                        "text": "🌧️ Dark clouds scattered"
+                      },
+                      "14": {
+                        "color": "super-light-yellow",
+                        "index": 12,
+                        "text": "🌥️ Mostly cloudy thin"
+                      },
+                      "15": {
+                        "color": "blue",
+                        "index": 13,
+                        "text": "⛅ Partly cloudy"
+                      },
+                      "16": {
+                        "color": "dark-blue",
+                        "index": 14,
+                        "text": "🌧️ Mostly cloudy with dark clouds"
+                      },
+                      "17": {
+                        "color": "green",
+                        "index": 15,
+                        "text": "☁️ Thin overcast"
+                      },
+                      "18": {
+                        "color": "green",
+                        "index": 16,
+                        "text": "☁️ Overcast"
+                      },
+                      "19": {
+                        "color": "dark-purple",
+                        "index": 17,
+                        "text": "🌩️ Heavy overcast / stormy"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "from": 3,
+                      "result": {
+                        "color": "blue",
+                        "index": 3,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "to": 4
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "blue",
+                        "index": 4,
+                        "text": "⛅ Partly cloudy"
+                      },
+                      "to": 6
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "displayName",
+                "value": "Sky Condition"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 83
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Average Temperature"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 183
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Temperature"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "light-blue"
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 10
+                    },
+                    {
+                      "color": "#EF843C",
+                      "value": 20
+                    },
+                    {
+                      "color": "red",
+                      "value": 30
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 40
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Minimum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Maximum Wind Speed"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 42
+      },
+      "id": 26,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, temperature_avg / 10.0, temperature_min/10.0, temperature_max/10.0, dewpoint_avg/ 10.0, dewpoint_min/10.0, dewpoint_max/10.0, pressure_avg/ 10.0,pressure_min/10.0, pressure_max/10.0, wind_direction, wind_speed_avg/ 10.0, wind_speed_min/10.0, wind_speed_max/10.0, sky_condition, precipitation/ 10.0\nFROM weather.monthly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Monthly Summary",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "temperature_avg / 10.0",
+                "dewpoint_avg / 10.0",
+                "pressure_avg / 10.0",
+                "wind_direction",
+                "wind_speed_avg / 10.0",
+                "sky_condition",
+                "precipitation / 10.0",
+                "dewpoint_min / 10.0",
+                "dewpoint_max / 10.0",
+                "temperature_min / 10.0",
+                "temperature_max / 10.0",
+                "pressure_min / 10.0",
+                "pressure_max / 10.0",
+                "wind_speed_min / 10.0",
+                "wind_speed_max / 10.0"
+              ]
+            }
+          }
+        },
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "YYYY-MM",
+            "timeField": "timestamp",
+            "useTimezone": true
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed",
+                  "seriesBy": "min"
+                }
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "smooth"
+              },
+              {
+                "id": "custom.fillBelowTo",
+                "value": "temperature_min / 10.0"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    5,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Min"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "temperature_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "custom.fillBelowTo",
+                "value": "temperature_avg / 10.0"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 57
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, temperature_avg / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "B",
+          "target": "SELECT wsid, timestamp, temperature_min / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "C",
+          "target": "SELECT wsid, timestamp, temperature_max / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Temperature",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "temperature_avg / 10.0",
+                "temperature_min / 10.0",
+                "temperature_max / 10.0"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed",
+                  "seriesBy": "min"
+                }
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "smooth"
+              },
+              {
+                "id": "custom.fillBelowTo",
+                "value": "dewpoint_min / 10.0"
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    5,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Min"
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "dewpoint_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "celsius"
+              },
+              {
+                "id": "custom.fillBelowTo",
+                "value": "dewpoint_avg / 10.0"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 65
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, dewpoint_avg / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "B",
+          "target": "SELECT wsid, timestamp, dewpoint_min / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "C",
+          "target": "SELECT wsid, timestamp, dewpoint_max / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Dewpoint",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "dewpoint_avg / 10.0",
+                "dewpoint_min / 10.0",
+                "dewpoint_max / 10.0"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_avg / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed",
+                  "seriesBy": "min"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 24
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Min"
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 44
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "wind_speed_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "velocityms"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 15
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 73
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, wind_speed_avg / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "B",
+          "target": "SELECT wsid, timestamp, wind_speed_min / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "C",
+          "target": "SELECT wsid, timestamp, wind_speed_max / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Wind Speed",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "wind_speed_avg / 10.0",
+                "wind_speed_min / 10.0",
+                "wind_speed_max / 10.0"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "fieldMinMax": true,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-blue"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Average"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed",
+                  "seriesBy": "min"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 24
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_min / 10.0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Min"
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 44
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "pressure_max / 10.0"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Max"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "yellow",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "pressurehpa"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 15
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 81
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp, pressure_avg / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "B",
+          "target": "SELECT wsid, timestamp, pressure_min / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        },
+        {
+          "datasource": {
+            "type": "hadesarchitect-cassandra-datasource",
+            "uid": "beq74t70xenlsf"
+          },
+          "datasourceId": 1,
+          "hide": false,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "C",
+          "target": "SELECT wsid, timestamp, pressure_max / 10.0\nFROM weather.daily WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Wind Speed",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "pressure_avg / 10.0",
+                "pressure_min / 10.0",
+                "pressure_max / 10.0"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "hadesarchitect-cassandra-datasource",
+        "uid": "beq74t70xenlsf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 25,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 1,
+            "spanNulls": false
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-yellow"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sky_condition"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "☀️ Clear sky"
+                      },
+                      "8": {
+                        "color": "green",
+                        "index": 3,
+                        "text": "☁️ Overcast"
+                      },
+                      "9": {
+                        "color": "super-light-blue",
+                        "index": 4,
+                        "text": "🌫️ Foggy / Obscured sky"
+                      },
+                      "10": {
+                        "color": "super-light-blue",
+                        "index": 5,
+                        "text": "🌫️ Hazy / Obscured partial"
+                      },
+                      "11": {
+                        "color": "super-light-yellow",
+                        "index": 6,
+                        "text": "🌤️ Thin clouds"
+                      },
+                      "12": {
+                        "color": "blue",
+                        "index": 7,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "13": {
+                        "color": "dark-blue",
+                        "index": 8,
+                        "text": "🌧️ Dark clouds scattered"
+                      },
+                      "14": {
+                        "color": "super-light-yellow",
+                        "index": 9,
+                        "text": "🌥️ Mostly cloudy thin"
+                      },
+                      "15": {
+                        "color": "blue",
+                        "index": 10,
+                        "text": "⛅ Partly cloudy"
+                      },
+                      "19": {
+                        "color": "dark-purple",
+                        "index": 11,
+                        "text": "🌩️ Heavy overcast / stormy"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "from": 3,
+                      "result": {
+                        "color": "blue",
+                        "index": 1,
+                        "text": "🌥️ Scattered clouds"
+                      },
+                      "to": 4
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 5,
+                      "result": {
+                        "color": "blue",
+                        "index": 2,
+                        "text": "⛅ Cloudy"
+                      },
+                      "to": 7
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 1,
+                      "result": {
+                        "index": 12,
+                        "text": "🌤️ Few clouds"
+                      },
+                      "to": 2
+                    },
+                    "type": "range"
+                  },
+                  {
+                    "options": {
+                      "from": 17,
+                      "result": {
+                        "index": 13,
+                        "text": "☁️ Overcast"
+                      },
+                      "to": 18
+                    },
+                    "type": "range"
+                  }
+                ]
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "hidden"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 89
+      },
+      "id": 31,
+      "options": {
+        "alignValue": "center",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": false,
+        "rowHeight": 1,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasourceId": 1,
+          "queryType": "query",
+          "rawQuery": true,
+          "refId": "A",
+          "target": "SELECT wsid, timestamp,  sky_condition\nFROM weather.hourly WHERE wsid = '${station}'"
+        }
+      ],
+      "title": "Sky Condition",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "timestamp",
+                "sky_condition"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "state-timeline"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "298690-99999",
+          "value": "298690-99999"
+        },
+        "definition": "SELECT wsid FROM station.station",
+        "description": "",
+        "label": "station",
+        "name": "station",
+        "options": [],
+        "query": {
+          "query": "SELECT wsid FROM station.station"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now/y",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Summary Dashboard",
+  "uid": "77330745-c529-43ed-be4d-c66beb387813",
+  "version": 8
+}
